@@ -1,0 +1,24 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esm"
+
+# Scheduled cleanup — purge expired videos every 10 minutes
+[functions.cleanup-videos]
+  schedule = "*/10 * * * *"
+
+# Increase timeout for AI vision calls
+[functions.refai-analyze]
+  max_duration = 30
+
+[[redirects]]
+  from = "/api/*"
+  to   = "/.netlify/functions/:splat"
+  status = 200
+
+[dev]
+  command   = "echo 'No build step'"
+  port      = 3000
+  targetPort = 3000
