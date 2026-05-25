@@ -49,7 +49,6 @@
       padding-bottom: calc(var(--safe-b) + 5.5rem);
     }
 
-    /* ── NOISE TEXTURE OVERLAY ── */
     body::before {
       content: '';
       position: fixed;
@@ -61,7 +60,6 @@
       background-size: 200px;
     }
 
-    /* ── TOP BAR ── */
     .topbar {
       position: sticky;
       top: 0;
@@ -75,8 +73,6 @@
       align-items: center;
       justify-content: flex-end;
     }
-
-
 
     .status-pill {
       display: flex;
@@ -105,48 +101,61 @@
       50%      { opacity: 0.5; box-shadow: 0 0 2px var(--lime); }
     }
 
-    /* ── PAGE ── */
-    .page {
+
+    /* ── LOADING SCREEN ── */
+    .loading-screen {
+      position: fixed !important;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+      z-index: 300;
+    }
+    .loading-screen.hidden { display: none !important; }
+    .loading-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    .loading-spinner {
+      width: 48px; height: 48px;
+      border: 3px solid var(--line2);
+      border-top-color: var(--lime);
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+    }
+    .loading-label {
+      font-family: var(--head);
+      font-weight: 800;
+      font-size: 2rem;
+      letter-spacing: 0.15em;
+      color: var(--lime);
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+
+    /* ── SCREENS ── */
+    .screen {
       position: relative;
       z-index: 1;
       max-width: 480px;
       margin: 0 auto;
       padding: 0 1.25rem;
+      transition: opacity 0.35s ease, transform 0.35s ease;
     }
+    .screen.hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-24px);
+      position: absolute;
+      top: 0; left: 0; right: 0;
+    }
+    .screen.result-screen.hidden { transform: translateY(24px); }
 
     /* ── HERO ── */
-    .hero {
-      padding: 2.5rem 0 2rem;
-    }
-    .hero-top-row {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-    .hero-logo { display: block; }
-    .hero-wordmark {
-      display: flex;
-      align-items: baseline;
-      gap: 0;
-      line-height: 1;
-    }
-    .hwm-replay {
-      font-family: var(--body);
-      font-weight: 700;
-     font-size: 2rem;
-      color: var(--text);
-      letter-spacing: -0.02em;
-    }
-    .hwm-desk {
-      font-family: var(--head);
-      font-weight: 800;
-      font-size: 2.1rem;
-      color: var(--lime);
-      letter-spacing: -0.01em;
-    }
-
+    .hero { padding: 2.5rem 0 2rem; }
     .hero-kicker {
       display: inline-flex;
       align-items: center;
@@ -162,7 +171,33 @@
       color: var(--lime);
       margin-bottom: 0.65rem;
     }
-
+    .hero-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .hero-wordmark {
+      display: flex;
+      align-items: baseline;
+      gap: 0;
+      line-height: 1;
+    }
+    .hwm-replay {
+      font-family: var(--body);
+      font-weight: 700;
+      font-size: 2rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+    .hwm-desk {
+      font-family: var(--head);
+      font-weight: 800;
+      font-size: 2.1rem;
+      color: var(--lime);
+      letter-spacing: -0.01em;
+    }
     .hero-title {
       font-family: var(--head);
       font-weight: 800;
@@ -173,52 +208,9 @@
       margin-bottom: 0;
     }
     .hero-title .accent { color: var(--lime); }
-    .title-logo-row {
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-      line-height: 0.95;
-    }
-    .hero-logo { flex-shrink: 0; vertical-align: middle; }
 
-    .hero-body {
-      font-size: 0.95rem;
-      font-weight: 300;
-      color: var(--muted2);
-      line-height: 1.65;
-      max-width: 380px;
-      margin-bottom: 1.25rem;
-    }
-    .hero-body strong { color: var(--text); font-weight: 500; }
+    .divider { height: 1px; background: var(--line); margin: 0.25rem 0 1.25rem; }
 
-    .hero-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-    }
-    .tag {
-      font-size: 0.65rem;
-      font-weight: 500;
-      color: var(--muted2);
-      border: 1px solid var(--line2);
-      border-radius: 4px;
-      padding: 0.25rem 0.55rem;
-      letter-spacing: 0.04em;
-    }
-    .tag.hi {
-      color: var(--lime);
-      border-color: rgba(200,241,53,0.25);
-      background: rgba(200,241,53,0.05);
-    }
-
-    /* ── DIVIDER ── */
-    .divider {
-      height: 1px;
-      background: var(--line);
-      margin: 0.25rem 0 1.25rem;
-    }
-
-    /* ── SECTION HEADER ── */
     .sh {
       font-size: 0.58rem;
       font-weight: 600;
@@ -230,27 +222,8 @@
       align-items: center;
       gap: 0.5rem;
     }
-    .sh::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--line);
-    }
+    .sh::after { content: ''; flex: 1; height: 1px; background: var(--line); }
 
-    /* ── DEMO CARD ── */
-    .demo-label::before {
-      content: '';
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--lime);
-    }
-    .demo-desc strong { color: var(--text); font-weight: 600; }
-
-
-    .demo-btn:active:not(:disabled) { background: var(--lime2); transform: scale(0.99); }
-    .demo-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
-    /* ── PANELS ── */
     .panel {
       background: var(--bg2);
       border: 1px solid var(--line);
@@ -283,7 +256,6 @@
     }
     .panel-body { padding: 0.9rem; }
 
-    /* drop zone */
     .drop {
       border: 1.5px dashed var(--line2);
       border-radius: 8px;
@@ -294,109 +266,47 @@
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
     }
-    .drop:active, .drop.dragover {
-      border-color: var(--lime);
-      background: rgba(200,241,53,0.04);
-    }
+    .drop:active, .drop.dragover { border-color: var(--lime); background: rgba(200,241,53,0.04); }
     .drop input { display: none; }
-
-    .change-clip-btn {
-      margin-top: 0.6rem;
-      background: none;
-      border: 1px solid var(--line2);
-      color: var(--muted2);
-      font-family: var(--body);
-      font-size: 0.7rem;
-      font-weight: 500;
-      padding: 0.4rem 0.75rem;
-      border-radius: 6px;
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-      transition: border-color 0.12s, color 0.12s;
-    }
-    .change-clip-btn:active { border-color: var(--lime); color: var(--lime); }
     .drop-icon { font-size: 2rem; margin-bottom: 0.5rem; display: block; }
     .drop-title { font-size: 0.95rem; font-weight: 600; color: var(--text); margin-bottom: 0.3rem; }
     .drop-hint { font-size: 0.72rem; color: var(--muted2); line-height: 1.55; }
-    .drop-hint strong { color: var(--muted2); font-weight: 500; }
 
     .preview-wrap { display: none; }
     .preview-wrap.show { display: block; margin-top: 0.8rem; }
     video {
-      width: 100%;
-      border-radius: 6px;
-      background: #000;
-      aspect-ratio: 16 / 9;
-      height: auto;
-      max-height: 70dvh;
-      display: block;
-      border: 1px solid var(--line);
+      width: 100%; border-radius: 6px; background: #000;
+      aspect-ratio: 16 / 9; height: auto; max-height: 70dvh;
+      display: block; border: 1px solid var(--line);
     }
-    .clip-meta {
-      font-size: 0.62rem; color: var(--muted); margin-top: 0.3rem;
-      display: flex; align-items: center; gap: 0.35rem;
+    .clip-meta { font-size: 0.62rem; color: var(--muted); margin-top: 0.3rem; display: flex; align-items: center; gap: 0.35rem; }
+    .clip-meta::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+    .change-clip-btn {
+      margin-top: 0.6rem; background: none; border: 1px solid var(--line2);
+      color: var(--muted2); font-family: var(--body); font-size: 0.7rem;
+      font-weight: 500; padding: 0.4rem 0.75rem; border-radius: 6px; cursor: pointer;
+      -webkit-tap-highlight-color: transparent; transition: border-color 0.12s, color 0.12s;
     }
-    .clip-meta::before {
-      content: ''; width: 6px; height: 6px;
-      border-radius: 50%; background: var(--green); flex-shrink: 0;
-    }
+    .change-clip-btn:active { border-color: var(--lime); color: var(--lime); }
 
-    /* chips */
-    .chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.85rem; }
-    .chips label {
-      cursor: pointer;
-      font-size: 0.75rem;
-      font-weight: 500;
-      padding: 0.45rem 0.75rem;
-      min-height: var(--tap);
-      display: flex;
-      align-items: center;
-      border-radius: 6px;
-      border: 1px solid var(--line2);
-      background: var(--bg3);
-      color: var(--muted2);
-      transition: all 0.12s;
-      -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
-    }
-    .chips input { position: absolute; opacity: 0; pointer-events: none; }
-    .chips label.selected {
-      border-color: var(--lime);
-      color: #0d0f14;
-      background: var(--lime);
-      font-weight: 600;
-    }
-
-    .field-label {
-      display: block;
-      font-size: 0.6rem;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 0.4rem;
-    }
-    select {
+    .question-input {
       width: 100%;
-      min-height: var(--tap);
-      padding: 0.6rem 0.75rem;
       background: var(--bg3);
       border: 1px solid var(--line2);
       color: var(--text);
-      border-radius: 7px;
       font-family: var(--body);
-      font-size: 0.9rem;
-      font-weight: 400;
+      font-size: 0.95rem;
+      padding: 0.75rem;
+      border-radius: 7px;
+      resize: none;
+      line-height: 1.5;
+      min-height: 90px;
       -webkit-appearance: none;
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a6070' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 0.75rem center;
-      padding-right: 2.2rem;
+      transition: border-color 0.15s;
     }
-    select:focus { outline: 2px solid var(--lime); outline-offset: 2px; }
+    .question-input::placeholder { color: var(--muted); }
+    .question-input:focus { outline: none; border-color: var(--lime); }
 
-    /* ── STICKY CTA ── */
     .cta-bar {
       position: sticky;
       bottom: 0;
@@ -408,452 +318,119 @@
       padding: 0.8rem 1.1rem calc(var(--safe-b) + 0.5rem);
       margin: 0 -1.1rem;
     }
-
     .call-btn {
-      width: 100%;
-      min-height: var(--tap);
-      padding: 0.9rem 1rem;
-      font-family: var(--body);
-      font-size: 0.9rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      background: var(--lime);
-      color: #0d0f14;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.15s, transform 0.1s;
-      -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
+      width: 100%; min-height: var(--tap); padding: 0.9rem 1rem;
+      font-family: var(--body); font-size: 0.9rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      background: var(--lime); color: #0d0f14; border: none;
+      border-radius: 8px; cursor: pointer; transition: background 0.15s, transform 0.1s;
+      -webkit-tap-highlight-color: transparent; touch-action: manipulation;
     }
     .call-btn:active:not(:disabled) { background: var(--lime2); transform: scale(0.99); }
     .call-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+    .cta-note { font-size: 0.6rem; color: var(--muted); text-align: center; margin-top: 0.45rem; line-height: 1.4; }
 
-    .cta-note {
-      font-size: 0.6rem;
-      color: var(--muted);
-      text-align: center;
-      margin-top: 0.45rem;
-      line-height: 1.4;
-    }
-
-    /* ── LOADING ── */
     .loading {
-      display: none;
-      margin-top: 1rem;
-      padding: 1.1rem;
-      background: var(--bg2);
-      border: 1px solid var(--line);
-      border-radius: var(--r);
-      align-items: center;
-      justify-content: center;
-      gap: 0.7rem;
-      font-size: 0.72rem;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--muted2);
+      display: none; margin-top: 1rem; padding: 1.1rem;
+      background: var(--bg2); border: 1px solid var(--line); border-radius: var(--r);
+      align-items: center; justify-content: center; gap: 0.7rem;
+      font-size: 0.72rem; font-weight: 500; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--muted2);
     }
     .loading.show { display: flex; }
-    .spinner {
-      width: 16px; height: 16px;
-      border: 2px solid var(--line2);
-      border-top-color: var(--lime);
-      border-radius: 50%;
-      animation: spin 0.65s linear infinite;
-      flex-shrink: 0;
-    }
+    .spinner { width: 16px; height: 16px; border: 2px solid var(--line2); border-top-color: var(--lime); border-radius: 50%; animation: spin 0.65s linear infinite; flex-shrink: 0; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ── ERROR ── */
-    .err {
-      margin-top: 0.85rem;
-      padding: 0.75rem 0.9rem;
-      background: rgba(255,77,77,0.07);
-      border: 1px solid rgba(255,77,77,0.25);
-      border-radius: 8px;
-      font-size: 0.78rem;
-      color: var(--red);
-      display: none;
-    }
+    .err { margin-top: 0.85rem; padding: 0.75rem 0.9rem; background: rgba(255,77,77,0.07); border: 1px solid rgba(255,77,77,0.25); border-radius: 8px; font-size: 0.78rem; color: var(--red); display: none; }
     .err.show { display: block; }
 
-    /* ── RESULT ── */
-    .result {
-      display: none;
-      margin-top: 1.1rem;
-      animation: slideUp 0.35s ease both;
+    /* ── RESULT SCREEN ── */
+    .result-screen { padding-top: 1.5rem; padding-bottom: 6rem; }
+    .result-screen-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
+    .back-btn {
+      background: none; border: 1px solid var(--line2); color: var(--muted2);
+      font-family: var(--body); font-size: 0.72rem; font-weight: 500;
+      padding: 0.4rem 0.75rem; border-radius: 6px; cursor: pointer;
+      display: flex; align-items: center; gap: 0.4rem;
+      -webkit-tap-highlight-color: transparent; transition: border-color 0.12s, color 0.12s;
     }
-    .result.show { display: block; }
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(12px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+    .back-btn:active { border-color: var(--lime); color: var(--lime); }
 
-    .result-header {
-      background: var(--bg2);
-      border: 1px solid var(--line);
-      border-bottom: none;
-      border-radius: var(--r) var(--r) 0 0;
-      padding: 0.75rem 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .result-title {
-      font-family: var(--head);
-      font-weight: 800;
-      font-size: 0.95rem;
-      letter-spacing: -0.01em;
-      color: var(--text);
-    }
-    .result-badge {
-      font-size: 0.55rem;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted);
-      border: 1px solid var(--line2);
-      border-radius: 4px;
-      padding: 0.2rem 0.45rem;
-    }
+    .result-header { background: var(--bg2); border: 1px solid var(--line); border-bottom: none; border-radius: var(--r) var(--r) 0 0; padding: 0.75rem 1rem; display: flex; align-items: center; justify-content: space-between; }
+    .result-title { font-family: var(--head); font-weight: 800; font-size: 0.95rem; letter-spacing: -0.01em; color: var(--text); }
+    .result-badge { font-size: 0.55rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--line2); border-radius: 4px; padding: 0.2rem 0.45rem; }
+    .result-body { background: var(--bg2); border: 1px solid var(--line); border-top: 1px solid var(--line2); border-radius: 0 0 var(--r) var(--r); padding: 1rem; }
 
-    .result-body {
-      background: var(--bg2);
-      border: 1px solid var(--line);
-      border-top: 1px solid var(--line2);
-      border-radius: 0 0 var(--r) var(--r);
-      padding: 1rem;
-    }
+    .angle-take { background: var(--bg3); border-radius: 8px; padding: 0.85rem 0.95rem; margin-bottom: 1rem; position: relative; }
+    .angle-take::before { content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 3px; background: var(--lime); border-radius: 3px 0 0 3px; }
+    .at-label { font-size: 0.54rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--lime); display: block; margin-bottom: 0.35rem; }
+    .at-text { font-size: 0.85rem; font-weight: 300; font-style: italic; color: var(--text); line-height: 1.6; }
 
-    /* angle take */
-    .angle-take {
-      background: var(--bg3);
-      border-radius: 8px;
-      padding: 0.85rem 0.95rem;
-      margin-bottom: 1rem;
-      position: relative;
-    }
-    .angle-take::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; bottom: 0;
-      width: 3px;
-      background: var(--lime);
-      border-radius: 3px 0 0 3px;
-    }
-    .at-label {
-      font-size: 0.54rem;
-      font-weight: 600;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--lime);
-      display: block;
-      margin-bottom: 0.35rem;
-    }
-    .at-text {
-      font-size: 0.85rem;
-      font-weight: 300;
-      font-style: italic;
-      color: var(--text);
-      line-height: 1.6;
-    }
-
-    /* verdict grid */
     .verdict-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.5rem; margin-bottom: 0.85rem; }
-    .vbox {
-      background: var(--bg3);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 0.75rem 0.9rem;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      transition: border-color 0.2s;
-    }
+    .vbox { background: var(--bg3); border: 1px solid var(--line); border-radius: 8px; padding: 0.75rem 0.9rem; display: flex; align-items: center; gap: 1rem; transition: border-color 0.2s; }
     .vbox.vfoul  { border-color: rgba(255,77,77,0.35); }
     .vbox.vclean { border-color: rgba(52,217,128,0.35); }
     .vbox.vwarn  { border-color: rgba(245,166,35,0.35); }
-
-    .vbox-label {
-      font-size: 0.56rem;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted);
-      min-width: 80px;
-      flex-shrink: 0;
-      line-height: 1.3;
-    }
+    .vbox-label { font-size: 0.56rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text); min-width: 80px; flex-shrink: 0; line-height: 1.3; }
     .vbox-right { flex: 1; }
-    .v-value {
-      font-family: var(--head);
-      font-size: 1.3rem;
-      font-weight: 800;
-      color: var(--text);
-      letter-spacing: -0.01em;
-      line-height: 1.1;
-    }
+    .v-value { font-family: var(--head); font-size: 1.3rem; font-weight: 800; color: var(--text); letter-spacing: -0.01em; line-height: 1.1; }
     .v-value.foul  { color: var(--red); }
     .v-value.clean { color: var(--green); }
-    .v-value.muted { color: var(--muted); font-size: 0.9rem; font-family: var(--body); font-weight: 400; }
+    .v-value.muted { color: var(--text); font-size: 0.9rem; font-family: var(--body); font-weight: 400; }
     .v-value.warn  { color: var(--amber); }
-    .v-sub {
-      font-size: 0.64rem;
-      color: var(--muted);
-      margin-top: 0.15rem;
-      line-height: 1.3;
-    }
+    .v-sub { font-size: 0.64rem; color: var(--text); margin-top: 0.15rem; line-height: 1.3; }
 
-    /* detail */
-    .detail-toggle {
-      width: 100%;
-      min-height: 40px;
-      padding: 0.5rem;
-      background: transparent;
-      border: 1px solid var(--line2);
-      color: var(--muted2);
-      font-family: var(--body);
-      font-size: 0.7rem;
-      font-weight: 500;
-      letter-spacing: 0.05em;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: border-color 0.12s, color 0.12s;
-      -webkit-tap-highlight-color: transparent;
-      margin-bottom: 0;
-    }
+    .detail-toggle { width: 100%; min-height: 40px; padding: 0.5rem; background: transparent; border: 1px solid var(--line2); color: var(--muted2); font-family: var(--body); font-size: 0.7rem; font-weight: 500; letter-spacing: 0.05em; border-radius: 6px; cursor: pointer; transition: border-color 0.12s, color 0.12s; -webkit-tap-highlight-color: transparent; margin-bottom: 0; }
     .detail-toggle:active { border-color: var(--lime); color: var(--lime); }
-
-    .detail-panel {
-      display: none;
-      margin-top: 0.7rem;
-      background: var(--bg3);
-      border-radius: 8px;
-      padding: 0.85rem;
-      font-size: 0.74rem;
-      color: var(--muted2);
-      line-height: 1.65;
-    }
+    .detail-panel { display: none; margin-top: 0.7rem; background: var(--bg3); border-radius: 8px; padding: 0.85rem; font-size: 0.74rem; color: var(--text); line-height: 1.65; }
     .detail-panel.open { display: block; }
     .detail-panel p { margin-bottom: 0.4rem; }
     .detail-panel strong { color: var(--text); font-weight: 500; }
 
     .copy-row { display: flex; gap: 0.5rem; margin-top: 0.85rem; }
-    .copy-row button {
-      flex: 1;
-      min-height: var(--tap);
-      padding: 0.6rem;
-      font-family: var(--body);
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      border-radius: 6px;
-      cursor: pointer;
-      border: 1px solid var(--line2);
-      background: var(--bg3);
-      color: var(--muted2);
-      transition: all 0.12s;
-      -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
-    }
-    .copy-row button.primary {
-      background: var(--text);
-      border-color: var(--text);
-      color: var(--bg);
-    }
-    .copy-row button.ok {
-      border-color: var(--green);
-      color: var(--green);
-      background: transparent;
-    }
+    .copy-row button { flex: 1; min-height: var(--tap); padding: 0.6rem; font-family: var(--body); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.05em; border-radius: 6px; cursor: pointer; border: 1px solid var(--line2); background: var(--bg3); color: var(--muted2); transition: all 0.12s; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+    .copy-row button.primary { background: var(--text); border-color: var(--text); color: var(--bg); }
+    .copy-row button.ok { border-color: var(--green); color: var(--green); background: transparent; }
 
-    /* ── SHARE BUTTON ── */
-    .share-btn {
-      width: 100%;
-      min-height: var(--tap);
-      margin-top: 0.5rem;
-      padding: 0.75rem 1rem;
-      font-family: var(--body);
-      font-size: 0.82rem;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      background: var(--lime);
-      color: #0d0f14;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.55rem;
-      transition: background 0.15s, transform 0.1s;
-      -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
-    }
+    .share-btn { width: 100%; min-height: var(--tap); margin-top: 0.5rem; padding: 0.75rem 1rem; font-family: var(--body); font-size: 0.82rem; font-weight: 700; letter-spacing: 0.06em; background: var(--lime); color: #0d0f14; border: none; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.55rem; transition: background 0.15s, transform 0.1s; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
     .share-btn:active { background: var(--lime2); transform: scale(0.99); }
     .share-btn.shared { background: var(--green); color: #fff; }
 
-    /* ── ASK SECTION ── */
     .ask-section { display: none; margin-top: 1.1rem; }
     .ask-section.show { display: block; }
-
-    .ask-panel {
-      background: var(--bg2);
-      border: 1px solid var(--line);
-      border-radius: var(--r);
-      overflow: hidden;
-    }
-    .ask-head {
-      padding: 0.65rem 0.9rem;
-      border-bottom: 1px solid var(--line);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.6rem;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-    .ask-head-dot {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--lime);
-      flex-shrink: 0;
-    }
-
-    .chat-thread {
-      padding: 0.85rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      max-height: 360px;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-    }
+    .ask-panel { background: var(--bg2); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
+    .ask-head { padding: 0.65rem 0.9rem; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 0.5rem; font-size: 0.6rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+    .ask-head-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--lime); flex-shrink: 0; }
+    .chat-thread { padding: 0.85rem; display: flex; flex-direction: column; gap: 0.75rem; max-height: 360px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
     .chat-thread:empty { padding: 0; }
-
     .msg { display: flex; flex-direction: column; gap: 0.18rem; max-width: 88%; }
     .msg.user { align-self: flex-end; align-items: flex-end; }
     .msg.bot  { align-self: flex-start; align-items: flex-start; }
-
-    .bubble {
-      padding: 0.65rem 0.85rem;
-      font-size: 0.85rem;
-      line-height: 1.55;
-      border-radius: 10px;
-    }
-    .msg.user .bubble {
-      background: var(--lime);
-      color: #0d0f14;
-      font-weight: 500;
-      border-bottom-right-radius: 3px;
-    }
-    .msg.bot .bubble {
-      background: var(--bg3);
-      border: 1px solid var(--line2);
-      color: var(--text);
-      font-weight: 300;
-      border-bottom-left-radius: 3px;
-    }
-    .sender {
-      font-size: 0.54rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
-      padding: 0 0.2rem;
-    }
-
-    .typing-dots {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      padding: 0.65rem 0.85rem;
-      background: var(--bg3);
-      border: 1px solid var(--line2);
-      border-radius: 10px;
-      border-bottom-left-radius: 3px;
-      width: fit-content;
-    }
-    .typing-dots span {
-      width: 5px; height: 5px;
-      border-radius: 50%;
-      background: var(--muted);
-      animation: blink 1.2s ease infinite;
-    }
+    .bubble { padding: 0.65rem 0.85rem; font-size: 0.85rem; line-height: 1.55; border-radius: 10px; }
+    .msg.user .bubble { background: var(--lime); color: #0d0f14; font-weight: 500; border-bottom-right-radius: 3px; }
+    .msg.bot .bubble { background: var(--bg3); border: 1px solid var(--line2); color: var(--text); font-weight: 300; border-bottom-left-radius: 3px; }
+    .sender { font-size: 0.54rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 0 0.2rem; }
+    .typing-dots { display: flex; align-items: center; gap: 4px; padding: 0.65rem 0.85rem; background: var(--bg3); border: 1px solid var(--line2); border-radius: 10px; border-bottom-left-radius: 3px; width: fit-content; }
+    .typing-dots span { width: 5px; height: 5px; border-radius: 50%; background: var(--muted); animation: blink 1.2s ease infinite; }
     .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
     .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
-    @keyframes blink {
-      0%,80%,100% { opacity: 0.25; transform: scale(0.85); }
-      40%          { opacity: 1; transform: scale(1); }
-    }
-
-    .ask-input-row {
-      display: flex;
-      align-items: flex-end;
-      gap: 0.5rem;
-      padding: 0.75rem 0.85rem;
-      border-top: 1px solid var(--line);
-    }
-    .ask-input {
-      flex: 1;
-      background: var(--bg3);
-      border: 1px solid var(--line2);
-      color: var(--text);
-      font-family: var(--body);
-      font-size: 1rem;
-      font-weight: 400;
-      padding: 0.6rem 0.75rem;
-      border-radius: 7px;
-      resize: none;
-      line-height: 1.4;
-      min-height: var(--tap);
-      max-height: 110px;
-      -webkit-appearance: none;
-      transition: border-color 0.15s;
-    }
+    @keyframes blink { 0%,80%,100%{opacity:0.25;transform:scale(0.85);}40%{opacity:1;transform:scale(1);} }
+    .ask-input-row { display: flex; align-items: flex-end; gap: 0.5rem; padding: 0.75rem 0.85rem; border-top: 1px solid var(--line); }
+    .ask-input { flex: 1; background: var(--bg3); border: 1px solid var(--line2); color: var(--text); font-family: var(--body); font-size: 1rem; font-weight: 400; padding: 0.6rem 0.75rem; border-radius: 7px; resize: none; line-height: 1.4; min-height: var(--tap); max-height: 110px; -webkit-appearance: none; transition: border-color 0.15s; }
     .ask-input::placeholder { color: var(--muted); }
     .ask-input:focus { outline: none; border-color: var(--lime); }
-
-    .ask-send {
-      flex-shrink: 0;
-      width: 44px; height: 44px;
-      border-radius: 7px;
-      background: var(--lime);
-      border: none;
-      cursor: pointer;
-      display: grid;
-      place-items: center;
-      transition: background 0.12s;
-      -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
-    }
+    .ask-send { flex-shrink: 0; width: 44px; height: 44px; border-radius: 7px; background: var(--lime); border: none; cursor: pointer; display: grid; place-items: center; transition: background 0.12s; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
     .ask-send:disabled { opacity: 0.3; cursor: not-allowed; }
     .ask-send:active:not(:disabled) { background: var(--lime2); }
 
-    /* ── FOOTER ── */
-    footer {
-      margin-top: 2.5rem;
-      padding: 1.25rem 0 0.5rem;
-      border-top: 1px solid var(--line);
-      font-size: 0.62rem;
-      color: var(--muted);
-      text-align: center;
-      line-height: 1.7;
-    }
+    footer { margin-top: 2.5rem; padding: 1.25rem 0 0.5rem; border-top: 1px solid var(--line); font-size: 0.62rem; color: var(--muted); text-align: center; line-height: 1.7; }
     footer strong { color: var(--muted2); }
 
-    /* ── MOBILE ── */
     @media (max-width: 380px) {
-      .hero-title { font-size: 2rem; }
+      .hero-title { font-size: 1.4rem; }
       .vbox-label { min-width: 65px; font-size: 0.52rem; }
     }
-
     @media (hover: hover) {
-      .demo-btn:hover { background: var(--lime2); }
       .call-btn:not(:disabled):hover { background: var(--lime2); }
       .drop:hover { border-color: var(--lime); background: rgba(200,241,53,0.03); }
       .detail-toggle:hover { border-color: var(--lime); color: var(--lime); }
@@ -862,16 +439,13 @@
 </head>
 <body>
 
-  <!-- TOP BAR -->
   <header class="topbar">
     <div class="status-pill">Active</div>
   </header>
 
-  <div class="page">
-
-    <!-- HERO -->
+  <!-- INPUT SCREEN -->
+  <div class="screen input-screen" id="inputScreen">
     <section class="hero">
-      <div class="hero-kicker">AI Officiating Review</div>
       <div class="hero-top-row">
         <div class="hero-wordmark">
           <span class="hwm-replay">replay</span><span class="hwm-desk">desk</span>
@@ -883,27 +457,19 @@
         </svg>
         <h1 class="hero-title">The call,<br><span class="accent">reviewed.</span></h1>
       </div>
-     
-      
     </section>
 
     <div class="divider"></div>
 
-    <!-- UPLOAD — single window, clip plays in place -->
     <div class="panel">
       <div class="panel-head"><span class="panel-num">1</span> Upload your clip</div>
       <div class="panel-body">
-        <!-- Drop state: shown until file chosen -->
         <div class="drop" id="drop" role="button" tabindex="0" aria-label="Upload video clip">
           <input type="file" id="file" accept="video/*">
           <span class="drop-icon">🎬</span>
           <div class="drop-title">Tap to choose a clip</div>
-          <div class="drop-hint">
-            Screen recordings work great · Under 25 MB · 3–10 sec ideal<br>
-            
-          </div>
+          <div class="drop-hint">Screen recordings work great · Under 25 MB · 3–10 sec ideal</div>
         </div>
-        <!-- Video plays here once uploaded — replaces drop zone -->
         <div class="preview-wrap" id="previewWrap">
           <video id="video" playsinline controls></video>
           <p class="clip-meta" id="meta"></p>
@@ -912,120 +478,107 @@
       </div>
     </div>
 
-    <!-- PARAMETERS -->
-    <div class="sh">Parameters</div>
-    <div class="panel">
-      <div class="panel-head"><span class="panel-num">2</span> Set the argument</div>
+    <div class="panel" style="margin-bottom:0.5rem">
+      <div class="panel-head"><span class="panel-num">2</span> What's the call in question?</div>
       <div class="panel-body">
-        <div class="chips" id="debateChips" role="group" aria-label="Review type">
-          <label><input type="radio" name="debate" value="all" checked><span>Full breakdown</span></label>
-          <label><input type="radio" name="debate" value="foul"><span>Foul or not?</span></label>
-          <label><input type="radio" name="debate" value="flagrant"><span>Flagrant?</span></label>
-          <label><input type="radio" name="debate" value="oob"><span>Out of bounds?</span></label>
-        </div>
-        <label class="field-label" for="sport">League</label>
-        <select id="sport" aria-label="League">
-          <option value="nba">NBA</option>
-          <option value="ncaa">NCAA</option>
-          <option value="other" selected>Other basketball</option>
-        </select>
+        <textarea id="questionInput" class="question-input" placeholder="e.g. Was this a foul? Was it flagrant? Who touched it last?" autocorrect="on" autocapitalize="sentences"></textarea>
       </div>
     </div>
 
-    <!-- STICKY CTA -->
     <div class="cta-bar">
       <button type="button" class="call-btn" id="callBtn" disabled>Submit for Review</button>
       <p class="cta-note">Nothing is stored · Six frames extracted, reviewed, discarded</p>
     </div>
 
-    <!-- LOADING + ERROR -->
-    <div class="loading" id="loading">
-      <div class="spinner"></div>
-      Analyzing from this angle…
-    </div>
     <p class="err" id="err" role="alert"></p>
 
-    <!-- RESULT -->
-    <article class="result" id="result" aria-live="polite">
-      <div class="result-header">
-        <div class="result-title">Official Review</div>
-        <div class="result-badge">One angle · Not official</div>
+    <footer>
+      Fan review system — not affiliated with any league or officiating body.<br>
+      Sharing on X? Tag <strong>@replaydesk</strong> with the clip.
+    </footer>
+  </div>
+
+
+  <!-- LOADING SCREEN -->
+  <div class="screen loading-screen hidden" id="loadingScreen">
+    <div class="loading-center">
+      <div class="loading-spinner"></div>
+      <div class="loading-label">UNDER REVIEW</div>
+    </div>
+  </div>
+
+  <!-- RESULT SCREEN -->
+  <div class="screen result-screen hidden" id="resultScreen">
+    <div class="result-screen-header">
+      <button type="button" class="back-btn" id="backBtn">← New clip</button>
+      <div class="result-badge">One angle · Not official</div>
+    </div>
+
+    <div class="result-header">
+      <div class="result-title">Official Review</div>
+    </div>
+    <div class="result-body">
+      <div class="angle-take">
+        <span class="at-label">Analyst Read</span>
+        <p class="at-text" id="angleTake"></p>
       </div>
-      <div class="result-body">
-        <div class="angle-take">
-          <span class="at-label">Analyst Read</span>
-          <p class="at-text" id="angleTake"></p>
-        </div>
 
-        <div class="verdict-grid">
-          <div class="vbox" id="boxFoul">
-            <div class="vbox-label">Foul Call</div>
-            <div class="vbox-right">
-              <div class="v-value" id="callLine">—</div>
-              <div class="v-sub" id="foulSub"></div>
-            </div>
-          </div>
-          <div class="vbox" id="boxFlagrant">
-            <div class="vbox-label">Flagrant</div>
-            <div class="vbox-right">
-              <div class="v-value muted" id="flagrantLine">—</div>
-              <div class="v-sub" id="flagrantSub"></div>
-            </div>
-          </div>
-          <div class="vbox" id="boxOob">
-            <div class="vbox-label">Out of Bounds</div>
-            <div class="vbox-right">
-              <div class="v-value muted" id="oobLine">—</div>
-              <div class="v-sub" id="oobSub"></div>
-            </div>
+      <div class="verdict-grid">
+        <div class="vbox" id="boxFoul">
+          <div class="vbox-label">Foul Call</div>
+          <div class="vbox-right">
+            <div class="v-value" id="callLine">—</div>
+            <div class="v-sub" id="foulSub"></div>
           </div>
         </div>
-
-        <button type="button" class="detail-toggle" id="detailToggle" aria-expanded="false">
-          Show full breakdown ▾
-        </button>
-        <div class="detail-panel" id="detailPanel">
-          <p><strong>Foul edge:</strong> <span id="edge">—</span></p>
-          <p><strong>Flop:</strong> <span id="flop">—</span></p>
-          <p><strong>Foul reasoning:</strong> <span id="why">—</span></p>
-          <p><strong>Flagrant reasoning:</strong> <span id="flagrantWhy">—</span></p>
-          <p><strong>OOB reasoning:</strong> <span id="oobWhy">—</span></p>
+        <div class="vbox" id="boxFlagrant">
+          <div class="vbox-label">Flagrant</div>
+          <div class="vbox-right">
+            <div class="v-value muted" id="flagrantLine">—</div>
+            <div class="v-sub" id="flagrantSub"></div>
+          </div>
         </div>
-
-        <div class="copy-row">
-          <button type="button" class="primary" id="copyBtn">Copy for X</button>
-          <button type="button" id="againBtn">New Clip</button>
+        <div class="vbox" id="boxOob">
+          <div class="vbox-label">Out of Bounds</div>
+          <div class="vbox-right">
+            <div class="v-value muted" id="oobLine">—</div>
+            <div class="v-sub" id="oobSub"></div>
+          </div>
         </div>
-
-        <button type="button" class="share-btn" id="shareBtn">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <circle cx="12" cy="3" r="1.8" stroke="#0d0f14" stroke-width="1.5"/>
-            <circle cx="12" cy="13" r="1.8" stroke="#0d0f14" stroke-width="1.5"/>
-            <circle cx="3"  cy="8" r="1.8" stroke="#0d0f14" stroke-width="1.5"/>
-            <line x1="4.7" y1="7" x2="10.3" y2="4"   stroke="#0d0f14" stroke-width="1.5" stroke-linecap="round"/>
-            <line x1="4.7" y1="9" x2="10.3" y2="12"  stroke="#0d0f14" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-          Share This Ruling
-        </button>
       </div>
-    </article>
 
-    <!-- ASK THE ANALYST -->
+      <button type="button" class="detail-toggle" id="detailToggle" aria-expanded="false">Show full breakdown ▾</button>
+      <div class="detail-panel" id="detailPanel">
+        <p><strong>Foul edge:</strong> <span id="edge">—</span></p>
+        <p><strong>Flop:</strong> <span id="flop">—</span></p>
+        <p><strong>Foul reasoning:</strong> <span id="why">—</span></p>
+        <p><strong>Flagrant reasoning:</strong> <span id="flagrantWhy">—</span></p>
+        <p><strong>OOB reasoning:</strong> <span id="oobWhy">—</span></p>
+      </div>
+
+      <div class="copy-row">
+        <button type="button" class="primary" id="copyBtn">Copy for X</button>
+        <button type="button" id="againBtn">New Clip</button>
+      </div>
+      <button type="button" class="share-btn" id="shareBtn">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="12" cy="3" r="1.8" stroke="#0d0f14" stroke-width="1.5"/>
+          <circle cx="12" cy="13" r="1.8" stroke="#0d0f14" stroke-width="1.5"/>
+          <circle cx="3"  cy="8" r="1.8" stroke="#0d0f14" stroke-width="1.5"/>
+          <line x1="4.7" y1="7" x2="10.3" y2="4"   stroke="#0d0f14" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="4.7" y1="9" x2="10.3" y2="12"  stroke="#0d0f14" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        Share This Ruling
+      </button>
+    </div>
+
     <div class="ask-section" id="askSection">
       <div class="sh" style="margin-top:0.5rem">Ask the Analyst</div>
       <div class="ask-panel">
-        <div class="ask-head">
-          <div class="ask-head-dot"></div>
-          Follow-up questions on this ruling
-        </div>
+        <div class="ask-head"><div class="ask-head-dot"></div> Follow-up questions on this ruling</div>
         <div class="chat-thread" id="chatThread"></div>
         <div class="ask-input-row">
-          <textarea
-            class="ask-input" id="askInput"
-            placeholder='Ask anything… "Was that a flop?" "What changes the call?"'
-            rows="1" aria-label="Ask a follow-up question"
-            autocomplete="off" autocorrect="on" autocapitalize="sentences"
-          ></textarea>
+          <textarea class="ask-input" id="askInput" placeholder='Ask anything… "Was that a flop?" "What changes the call?"' rows="1" aria-label="Ask a follow-up question" autocomplete="off" autocorrect="on" autocapitalize="sentences"></textarea>
           <button class="ask-send" id="askSend" aria-label="Send">
             <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
               <path d="M2 9h14M10 4l5 5-5 5" stroke="#0d0f14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1039,41 +592,50 @@
       Fan review system — not affiliated with any league or officiating body.<br>
       Sharing on X? Tag <strong>@replaydesk</strong> with the clip.
     </footer>
-
   </div>
 
   <script>
     const MAX_BYTES = 25*1024*1024, FRAME_COUNT = 6;
     const API_PATH  = '/.netlify/functions/refai-analyze';
-    const DEMO_MODE = new URLSearchParams(location.search).has('demo') || location.protocol==='file:';
     const $ = id => document.getElementById(id);
 
-    // ── Chip selection — JS-driven for broad browser compatibility ──
-    document.querySelectorAll('.chips label').forEach(label => {
-      label.addEventListener('click', () => {
-        label.closest('.chips').querySelectorAll('label').forEach(l => l.classList.remove('selected'));
-        label.classList.add('selected');
-      });
-      // Mark first chip selected on load
-      if (label.querySelector('input:checked')) label.classList.add('selected');
-    });
-
+    const inputScreen=$('inputScreen'),resultScreen=$('resultScreen'),loadingScreen=$('loadingScreen');
     const drop=$('drop'),fileInput=$('file'),video=$('video'),previewWrap=$('previewWrap'),
-          meta=$('meta'),callBtn=$('callBtn'),loading=$('loading'),err=$('err'),result=$('result'),
+          meta=$('meta'),callBtn=$('callBtn'),err=$('err'),
           angleTake=$('angleTake'),callLine=$('callLine'),foulSub=$('foulSub'),
           flagrantLine=$('flagrantLine'),flagrantSub=$('flagrantSub'),
           oobLine=$('oobLine'),oobSub=$('oobSub'),edgeEl=$('edge'),whyEl=$('why'),
           flopEl=$('flop'),flagrantWhyEl=$('flagrantWhy'),oobWhyEl=$('oobWhy'),
           detailToggle=$('detailToggle'),detailPanel=$('detailPanel'),copyBtn=$('copyBtn'),
           askSection=$('askSection'),askInput=$('askInput'),askSend=$('askSend'),
-          chatThread=$('chatThread');
+          chatThread=$('chatThread'),questionInput=$('questionInput');
 
     let objectUrl=null,currentFile=null,lastCardText='',
-        chatHistory=[],lastRulingCtx='',askBusy=false,currentVideoId=null;
+        chatHistory=[],lastRulingCtx='',askBusy=false;
+
+    function showLoading() {
+      inputScreen.classList.add('hidden');
+      resultScreen.classList.add('hidden');
+      loadingScreen.classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    function showResult() {
+      loadingScreen.classList.add('hidden');
+      inputScreen.classList.add('hidden');
+      resultScreen.classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    function showInput() {
+      loadingScreen.classList.add('hidden');
+      resultScreen.classList.add('hidden');
+      inputScreen.classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    $('backBtn').addEventListener('click', () => { resetUi(false); showInput(); });
 
     const clearObj=()=>{ if(objectUrl){URL.revokeObjectURL(objectUrl);objectUrl=null;} };
     const fmtBytes=n=>n<1048576?(n/1024).toFixed(1)+' KB':(n/1048576).toFixed(1)+' MB';
-    const getDebate=()=>(document.querySelector('input[name="debate"]:checked')||{}).value||'all';
     const prefix=t=>{ t=(t||'').trim(); if(!t) return 'From this angle, it appears the play needs a clearer clip.';
       return /^from this angle/i.test(t)?t:'From this angle, it appears '+t.replace(/^[.,\s]+/,''); };
 
@@ -1103,16 +665,17 @@
 
     function resetUi(keepFile){
       err.classList.remove('show');err.textContent='';
-      loading.classList.remove('show');result.classList.remove('show');
+      
       detailPanel.classList.remove('open');
       detailToggle.setAttribute('aria-expanded','false');
       detailToggle.textContent='Show full breakdown ▾';
       askSection.classList.remove('show');
-      chatThread.innerHTML='';chatHistory=[];lastRulingCtx='';currentVideoId=null;
+      chatThread.innerHTML='';chatHistory=[];lastRulingCtx='';
       if(!keepFile){clearObj();video.removeAttribute('src');video.load();
         previewWrap.classList.remove('show');
         drop.style.display='';
-        currentFile=null;callBtn.disabled=true;fileInput.value='';}
+        currentFile=null;callBtn.disabled=true;fileInput.value='';
+        questionInput.value='';}
     }
 
     function loadFile(file){
@@ -1122,7 +685,7 @@
       currentFile=file;clearObj();objectUrl=URL.createObjectURL(file);video.src=objectUrl;
       drop.style.display='none';
       previewWrap.classList.add('show');
-      meta.textContent=file.name+' · '+fmtBytes(file.size)+' · on your device only';
+      meta.textContent=file.name+' · '+fmtBytes(file.size);
       callBtn.disabled=false;
     }
 
@@ -1134,6 +697,7 @@
       e.preventDefault();drop.classList.remove('dragover');
       if(ev==='drop'&&e.dataTransfer?.files[0])loadFile(e.dataTransfer.files[0]);
     }));
+    $('changeClip').addEventListener('click',()=>resetUi(false));
 
     function waitFor(el,ev){
       return new Promise((res,rej)=>{
@@ -1199,54 +763,23 @@
       flagrantWhyEl.textContent=data.flagrant_why&&data.flagrant_why!=='n/a'?prefix(data.flagrant_why):'—';
       oobWhyEl.textContent=oob==='not in clip'?'—':prefix(data.oob_why||'');
       lastCardText=shareText(data);lastRulingCtx=lastCardText;
-      currentVideoId = data.videoId || null;
-      result.classList.add('show');askSection.classList.add('show');
-      setTimeout(()=>result.scrollIntoView({behavior:'smooth',block:'nearest'}),50);
-    }
-
-    function demoData(){
-      return{
-        angle:"From this angle, it appears Green's arm makes contact with the ball handler's forearm on the drive — marginal but present at a decisive moment.",
-        call:'FOUL',on:'ball handler driving left',edge:'borderline — could go either way',
-        why:"From this angle, the defender's reach clips the offensive player's forearm. The contact is real but minimal. Refs often let this go in flow, but it's there.",
-        flop:'no',flagrant:'not flagrant',
-        flagrant_why:'From this angle, the contact is a basketball play — going for the ball, not retaliating.',
-        oob:'not in clip',last_touch:'n/a',possession:'n/a',oob_edge:'n/a',oob_why:'n/a',
-      };
-    }
-
-    async function fetchCall(frames){
-      if(DEMO_MODE||!frames.length){await new Promise(r=>setTimeout(r,1100));return demoData();}
-
-      // Step 1: Send frames as JSON for AI analysis (frames are small ~100KB total)
-      const res=await fetch(API_PATH,{method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({sport:$('sport').value,debate:getDebate(),frames})});
-      const data=await res.json().catch(()=>({}));
-      if(!res.ok)throw new Error(data.error||'Could not get a call. Try again.');
-
-      // Step 2: Upload video separately as multipart (bypasses JSON size limit)
-      if(currentFile && data.uploadUrl){
-        try{
-          const form=new FormData();
-          form.append('video', currentFile);
-          form.append('rulingId', data.rulingId);
-          const vRes=await fetch('/api/refai-upload', {method:'POST', body:form});
-          const vData=await vRes.json().catch(()=>({}));
-          if(vData.videoId) data.videoId=vData.videoId;
-        }catch(e){ /* non-fatal — sharing image-only fallback */ }
-      }
-
-      return data;
+      showResult();
+      askSection.classList.add('show');
     }
 
     callBtn.addEventListener('click',async()=>{
-      if(!currentFile&&!DEMO_MODE)return;
-      resetUi(true);callBtn.disabled=true;loading.classList.add('show');
+      if(!currentFile)return;
+      resetUi(true);callBtn.disabled=true;showLoading();
       try{
-        const frames=!currentFile?[]:await extractFrames(video,FRAME_COUNT);
-        renderCall(await fetchCall(frames));
+        const frames=await extractFrames(video,FRAME_COUNT);
+        const question=questionInput.value.trim();
+        const res=await fetch(API_PATH,{method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({sport:'other',debate:'all',frames,question})});
+        const data=await res.json().catch(()=>({}));
+        if(!res.ok)throw new Error(data.error||'Could not get a call. Try again.');
+        renderCall(data);
       }catch(e){err.textContent=e.message||'Something went wrong.';err.classList.add('show');}
-      finally{loading.classList.remove('show');callBtn.disabled=!currentFile&&!DEMO_MODE;}
+      finally{callBtn.disabled=!currentFile;}
     });
 
     detailToggle.addEventListener('click',()=>{
@@ -1264,10 +797,8 @@
       }catch{err.textContent='Copy failed.';err.classList.add('show');}
     });
 
-    $('againBtn').addEventListener('click',()=>resetUi(false));
-    $('changeClip').addEventListener('click',()=>{ resetUi(false); });
+    $('againBtn').addEventListener('click',()=>{ resetUi(false); showInput(); });
     window.addEventListener('pagehide',clearObj);
-    if(DEMO_MODE)callBtn.disabled=false;
 
     // ── ASK THE ANALYST ──
     askInput.addEventListener('input',()=>{
@@ -1306,7 +837,7 @@
         const sys=`You are a sharp, direct basketball officiating analyst. You just reviewed a play from one camera angle and issued this ruling:\n\n${lastRulingCtx}\n\nAnswer follow-up questions about this specific play. Be direct — 2 to 4 sentences unless asked for more. You can speculate about other angles. Always note this is based on one camera angle.`;
         const res=await fetch('https://api.anthropic.com/v1/messages',{
           method:'POST',headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:sys,messages:chatHistory})
+          body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:1000,system:sys,messages:chatHistory})
         });
         const data=await res.json();
         const reply=data?.content?.[0]?.text||'No response — try again.';
@@ -1316,164 +847,88 @@
       finally{askBusy=false;askSend.disabled=false;askInput.focus();}
     }
 
-    // ── SHARE CARD ──────────────────────────────────────────
+    // ── SHARE CARD ──
     $('shareBtn').addEventListener('click', shareRuling);
 
     async function shareRuling() {
       const btn = $('shareBtn');
       btn.disabled = true;
       btn.textContent = 'Building card…';
-
       try {
         const canvas = document.createElement('canvas');
         const W = 1080, H = 1080;
         canvas.width = W; canvas.height = H;
         const ctx = canvas.getContext('2d');
-
-        // Background
         ctx.fillStyle = '#0d0f14';
         ctx.fillRect(0, 0, W, H);
-
-        // Subtle grid lines
         ctx.strokeStyle = 'rgba(255,255,255,0.04)';
         ctx.lineWidth = 1;
         for (let x = 0; x < W; x += 60) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
         for (let y = 0; y < H; y += 60) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
-
-        // Lime top bar
         ctx.fillStyle = '#c8f135';
         ctx.fillRect(0, 0, W, 8);
-
-        // Wordmark
-        ctx.font = 'bold 52px "DM Sans", sans-serif';
+        ctx.font = 'bold 52px sans-serif';
         ctx.fillStyle = '#e8eaf0';
         ctx.fillText('replay', 72, 100);
-        const rw = ctx.measureText('Replay').width;
-        ctx.font = 'bold 52px "Syne", sans-serif';
+        const rw = ctx.measureText('replay').width;
         ctx.fillStyle = '#c8f135';
         ctx.fillText('desk', 72 + rw + 2, 100);
-
-        // "OFFICIAL REVIEW" label
-        ctx.font = '600 22px "DM Sans", sans-serif';
+        ctx.font = '600 22px sans-serif';
         ctx.fillStyle = '#5a6070';
-        ctx.letterSpacing = '3px';
         ctx.fillText('OFFICIAL REVIEW', 72, 145);
-
-        // Divider
         ctx.fillStyle = '#252a36';
         ctx.fillRect(72, 168, W - 144, 1);
-
-        // Big verdict
         const callText = ($('callLine').textContent || '—').toUpperCase();
         const callCls  = $('callLine').className;
-        ctx.font = '800 160px "Syne", sans-serif';
-        ctx.fillStyle = callCls.includes('foul') ? '#ff4d4d'
-                      : callCls.includes('clean') ? '#34d980'
-                      : '#c8f135';
+        ctx.font = '800 160px sans-serif';
+        ctx.fillStyle = callCls.includes('foul') ? '#ff4d4d' : callCls.includes('clean') ? '#34d980' : '#c8f135';
         ctx.fillText(callText, 72, 360);
-
-        // Foul sub
         const foulSubTxt = $('foulSub').textContent;
-        if (foulSubTxt) {
-          ctx.font = '400 30px "DM Sans", sans-serif';
-          ctx.fillStyle = '#7a8090';
-          ctx.fillText(foulSubTxt, 72, 410);
-        }
-
-        // Divider
-        ctx.fillStyle = '#252a36';
-        ctx.fillRect(72, 445, W - 144, 1);
-
-        // Flagrant row
-        ctx.font = '600 22px "DM Sans", sans-serif';
-        ctx.fillStyle = '#5a6070';
-        ctx.fillText('FLAGRANT', 72, 510);
-        ctx.font = '700 34px "Syne", sans-serif';
+        if (foulSubTxt) { ctx.font = '400 30px sans-serif'; ctx.fillStyle = '#7a8090'; ctx.fillText(foulSubTxt, 72, 410); }
+        ctx.fillStyle = '#252a36'; ctx.fillRect(72, 445, W - 144, 1);
+        ctx.font = '600 22px sans-serif'; ctx.fillStyle = '#5a6070'; ctx.fillText('FLAGRANT', 72, 510);
+        ctx.font = '700 34px sans-serif';
         const fgText = $('flagrantLine').textContent || '—';
         const fgCls  = $('flagrantLine').className;
-        ctx.fillStyle = fgCls.includes('foul') ? '#ff4d4d'
-                      : fgCls.includes('clean') ? '#34d980'
-                      : '#e8eaf0';
+        ctx.fillStyle = fgCls.includes('foul') ? '#ff4d4d' : fgCls.includes('clean') ? '#34d980' : '#e8eaf0';
         ctx.fillText(fgText, 72, 555);
-
-        // OOB row
-        ctx.font = '600 22px "DM Sans", sans-serif';
-        ctx.fillStyle = '#5a6070';
-        ctx.fillText('OUT OF BOUNDS', 540, 510);
-        ctx.font = '700 34px "Syne", sans-serif';
+        ctx.font = '600 22px sans-serif'; ctx.fillStyle = '#5a6070'; ctx.fillText('OUT OF BOUNDS', 540, 510);
+        ctx.font = '700 34px sans-serif';
         const oobText = $('oobLine').textContent || '—';
         const oobCls  = $('oobLine').className;
-        ctx.fillStyle = oobCls.includes('foul') ? '#ff4d4d'
-                      : oobCls.includes('clean') ? '#34d980'
-                      : '#e8eaf0';
+        ctx.fillStyle = oobCls.includes('foul') ? '#ff4d4d' : oobCls.includes('clean') ? '#34d980' : '#e8eaf0';
         ctx.fillText(oobText, 540, 555);
-
-        // Divider
-        ctx.fillStyle = '#252a36';
-        ctx.fillRect(72, 585, W - 144, 1);
-
-        // Analyst read (angle take) — word wrap
+        ctx.fillStyle = '#252a36'; ctx.fillRect(72, 585, W - 144, 1);
         const angleText = $('angleTake').textContent || '';
-        ctx.font = '300 italic 28px "DM Sans", sans-serif';
-        ctx.fillStyle = '#7a8090';
+        ctx.font = '300 italic 28px sans-serif'; ctx.fillStyle = '#7a8090';
         const words = angleText.split(' ');
         let line = '', y2 = 645, maxW = W - 144;
         for (const word of words) {
           const test = line + (line ? ' ' : '') + word;
-          if (ctx.measureText(test).width > maxW && line) {
-            ctx.fillText(line, 72, y2);
-            line = word; y2 += 42;
-            if (y2 > 820) { ctx.fillText(line + '…', 72, y2); break; }
-          } else { line = test; }
+          if (ctx.measureText(test).width > maxW && line) { ctx.fillText(line, 72, y2); line = word; y2 += 42; if (y2 > 820) { ctx.fillText(line + '…', 72, y2); break; } } else { line = test; }
         }
         if (y2 <= 820) ctx.fillText(line, 72, y2);
-
-        // Bottom lime bar
-        ctx.fillStyle = '#c8f135';
-        ctx.fillRect(0, H - 8, W, 8);
-
-        // replaydesk.com watermark
-        ctx.font = '500 26px "DM Sans", sans-serif';
-        ctx.fillStyle = '#5a6070';
+        ctx.fillStyle = '#c8f135'; ctx.fillRect(0, H - 8, W, 8);
+        ctx.font = '500 26px sans-serif'; ctx.fillStyle = '#5a6070';
         const watermark = 'replaydesk.com';
         const wmW = ctx.measureText(watermark).width;
         ctx.fillText(watermark, W - wmW - 72, H - 38);
-
-        // Export as blob
         const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
         const file = new File([blob], 'replaydesk-ruling.png', { type: 'image/png' });
-
-        // Try native share sheet first (mobile)
         if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-          await navigator.share({
-            title: 'replaydesk Ruling',
-            text: lastCardText,
-            files: [file],
-          });
-          btn.textContent = 'Shared!';
-          btn.classList.add('shared');
+          await navigator.share({ title: 'replaydesk Ruling', text: lastCardText, files: [file] });
+          btn.textContent = 'Shared!'; btn.classList.add('shared');
         } else {
-          // Desktop fallback — download the image
           const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url; a.download = 'replaydesk-ruling.png';
-          a.click();
-          URL.revokeObjectURL(url);
-          btn.textContent = 'Image Downloaded!';
-          btn.classList.add('shared');
+          const a = document.createElement('a'); a.href = url; a.download = 'replaydesk-ruling.png'; a.click();
+          URL.revokeObjectURL(url); btn.textContent = 'Image Downloaded!'; btn.classList.add('shared');
         }
-
         setTimeout(() => {
-          btn.disabled = false;
-          btn.classList.remove('shared');
-          btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="12" cy="3" r="1.8" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="13" r="1.8" stroke="currentColor" stroke-width="1.5"/><circle cx="3" cy="8" r="1.8" stroke="currentColor" stroke-width="1.5"/><line x1="4.7" y1="7" x2="10.3" y2="4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="4.7" y1="9" x2="10.3" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg> Share This Ruling`;
+          btn.disabled = false; btn.classList.remove('shared');
+          btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="12" cy="3" r="1.8" stroke="#0d0f14" stroke-width="1.5"/><circle cx="12" cy="13" r="1.8" stroke="#0d0f14" stroke-width="1.5"/><circle cx="3" cy="8" r="1.8" stroke="#0d0f14" stroke-width="1.5"/><line x1="4.7" y1="7" x2="10.3" y2="4" stroke="#0d0f14" stroke-width="1.5" stroke-linecap="round"/><line x1="4.7" y1="9" x2="10.3" y2="12" stroke="#0d0f14" stroke-width="1.5" stroke-linecap="round"/></svg> Share This Ruling';
         }, 3000);
-
       } catch (e) {
-        if (e.name !== 'AbortError') {
-          err.textContent = 'Share failed — try again.';
-          err.classList.add('show');
-        }
+        if (e.name !== 'AbortError') { err.textContent = 'Share failed — try again.'; err.classList.add('show'); }
         btn.disabled = false;
         btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="12" cy="3" r="1.8" stroke="#0d0f14" stroke-width="1.5"/><circle cx="12" cy="13" r="1.8" stroke="#0d0f14" stroke-width="1.5"/><circle cx="3" cy="8" r="1.8" stroke="#0d0f14" stroke-width="1.5"/><line x1="4.7" y1="7" x2="10.3" y2="4" stroke="#0d0f14" stroke-width="1.5" stroke-linecap="round"/><line x1="4.7" y1="9" x2="10.3" y2="12" stroke="#0d0f14" stroke-width="1.5" stroke-linecap="round"/></svg> Share This Ruling';
       }
