@@ -1,4 +1,4 @@
-a<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -977,7 +977,7 @@ a<!DOCTYPE html>
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    $('backBtn').addEventListener('click', () => { resetUi(false); allScreensHide(); homeScreen.classList.remove('hidden'); window.scrollTo({top:0,behavior:'smooth'}); });
+    $('backBtn').addEventListener('click', () => { resetUi(false); goHome(); });
 
     const clearObj=()=>{ if(objectUrl){URL.revokeObjectURL(objectUrl);objectUrl=null;} };
     const fmtBytes=n=>n<1048576?(n/1024).toFixed(1)+' KB':(n/1048576).toFixed(1)+' MB';
@@ -1142,7 +1142,7 @@ a<!DOCTYPE html>
       }catch{err.textContent='Copy failed.';err.classList.add('show');}
     });
 
-    $('againBtn').addEventListener('click',()=>{ resetUi(false); allScreensHide(); homeScreen.classList.remove('hidden'); window.scrollTo({top:0,behavior:'smooth'}); });
+    $('againBtn').addEventListener('click',()=>{ resetUi(false); goHome(); });
     window.addEventListener('pagehide',clearObj);
 
     // ── ASK THE ANALYST ──
@@ -1289,10 +1289,27 @@ a<!DOCTYPE html>
         .forEach(s => s && s.classList.add('hidden'));
     }
 
+    function goHome() {
+      allScreensHide();
+      homeScreen.classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Push state when navigating away from home so browser back returns home
+    function pushState(tool) {
+      history.pushState({ tool }, '', '');
+    }
+
+    // Handle browser back button
+    window.addEventListener('popstate', (e) => {
+      goHome();
+    });
+
     $('goReplay').addEventListener('click', () => {
       allScreensHide();
       inputScreen.classList.remove('hidden');
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      pushState('replay');
     });
 
     $('goStat').addEventListener('click', () => {
@@ -1300,6 +1317,7 @@ a<!DOCTYPE html>
       statInputScreen.classList.remove('hidden');
       window.scrollTo({ top: 0, behavior: 'smooth' });
       loadWNBAGames();
+      pushState('stat');
     });
 
     // Override showInput to go back to home
@@ -1450,8 +1468,8 @@ a<!DOCTYPE html>
       }
     });
 
-    $('statBackBtn').addEventListener('click', () => { allScreensHide(); homeScreen.classList.remove('hidden'); window.scrollTo({top:0,behavior:'smooth'}); });
-    $('statAgainBtn').addEventListener('click', () => { allScreensHide(); homeScreen.classList.remove('hidden'); window.scrollTo({top:0,behavior:'smooth'}); });
+    $('statBackBtn').addEventListener('click', () => { goHome(); });
+    $('statAgainBtn').addEventListener('click', () => { goHome(); });
 
     $('statCopyBtn').addEventListener('click', async () => {
       if (!lastStatSummary) return;
@@ -1669,6 +1687,7 @@ a<!DOCTYPE html>
       mediaInputScreen.classList.remove('hidden');
       window.scrollTo({ top: 0, behavior: 'smooth' });
       loadMediaData();
+      pushState('media');
     });
 
     $('mediaAnalyzeBtn').addEventListener('click', async () => {
@@ -1718,12 +1737,8 @@ a<!DOCTYPE html>
       }
     });
 
-    $('mediaBackBtn').addEventListener('click', mediaGoHome);
-    $('mediaAgainBtn').addEventListener('click', () => {
-      allScreensHide();
-      mediaInputScreen.classList.remove('hidden');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+    $('mediaBackBtn').addEventListener('click', () => { goHome(); });
+    $('mediaAgainBtn').addEventListener('click', () => { goHome(); });
 
     $('mediaCopyBtn').addEventListener('click', async () => {
       const text = [
