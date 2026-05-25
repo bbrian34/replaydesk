@@ -1,10 +1,5 @@
 /**
  * replaydesk — refai-analyze
- * 
- * Handles two jobs in one function:
- *   POST /analyze  — receives frames + video, runs AI ruling, stores video temporarily
- *   DELETE /video  — deletes a stored video by ID (called after sharing)
- *   GET /video/:id — returns a temp video URL for the share sheet
  */
 
 import Anthropic from '@anthropic-ai/sdk';
@@ -13,22 +8,20 @@ import { randomUUID } from 'crypto';
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-// How long (ms) before a video auto-expires if user never explicitly deletes it
-const VIDEO_TTL_MS = 15 * 60 * 1000; // 15 minutes
+const VIDEO_TTL_MS = 15 * 60 * 1000;
 
 export default async function handler(req, context) {
   const url  = new URL(req.url);
   const path = url.pathname.replace(/.*\/refai-analyze/, '');
 
-  // ── CORS headers (lock down to your domain in production) ──
-  // Lock CORS to your domain — change this when you have a custom domain
-  const allowedOrigins = [
-    'https://replaydesk.netlify.app',
-    'https://replaydesk.com',
-    'https://www.replaydesk.com',
-  ];
+  // Allow any netlify.app subdomain plus custom domains
   const origin = req.headers.get('origin') || '';
-  const allowedOrigin = allowedOrigins.includes(origin) ? origin : allowedOrigins[0];
+  const allowedOrigin =
+    origin.endsWith('.netlify.app') ||
+    origin === 'https://replaydesk.com' ||
+    origin === 'https://www.replaydesk.com'
+      ? origin
+      : '*';
 
   const headers = {
     'Access-Control-Allow-Origin':  allowedOrigin,
@@ -42,7 +35,7 @@ export default async function handler(req, context) {
     return new Response(null, { status: 204, headers });
   }
 
-  // ── DELETE /video/:id — user finished sharing, wipe the video ──
+  // DELETE /video/:id
   if (req.method === 'DELETE' && path.startsWith('/video/')) {
     const videoId = path.replace('/video/', '').trim();
     if (!videoId) {
@@ -51,14 +44,11 @@ export default async function handler(req, context) {
     try {
       const store = getStore({ name: 'temp-videos', consistency: 'strong' });
       await store.delete(videoId);
-      return new Response(JSON.stringify({ deleted: true }), { status: 200, headers });
-    } catch (e) {
-      // Not found is fine — already deleted or expired
-      return new Response(JSON.stringify({ deleted: true }), { status: 200, headers });
-    }
+    } catch (e) {}
+    return new Response(JSON.stringify({ deleted: true }), { status: 200, headers });
   }
 
-  // ── GET /video/:id — return video blob so share sheet can attach it ──
+  // GET /video/:id
   if (req.method === 'GET' && path.startsWith('/video/')) {
     const videoId = path.replace('/video/', '').trim();
     try {
@@ -68,19 +58,19 @@ export default async function handler(req, context) {
         return new Response(JSON.stringify({ error: 'Video not found or expired' }), { status: 404, headers });
       }
       const { data, metadata } = entry;
-      const videoHeaders = {
-        'Content-Type': metadata.contentType || 'video/mp4',
-        'Cache-Control': 'no-store',
-        // tell the browser it will be gone soon
-        'X-Expires-At': metadata.expiresAt || '',
-      };
-      return new Response(data, { status: 200, headers: videoHeaders });
+      return new Response(data, {
+        status: 200,
+        headers: {
+          'Content-Type': metadata.contentType || 'video/mp4',
+          'Cache-Control': 'no-store',
+          'X-Expires-At': metadata.expiresAt || '',
+        },
+      });
     } catch (e) {
       return new Response(JSON.stringify({ error: 'Could not retrieve video' }), { status: 500, headers });
     }
   }
 
-  // ── POST / — main analysis endpoint ──
   if (req.method !== 'POST') {
     return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405, headers });
   }
@@ -98,7 +88,7 @@ export default async function handler(req, context) {
     return new Response(JSON.stringify({ error: 'No frames provided' }), { status: 400, headers });
   }
 
-  // ── 1. Store video temporarily (if provided) ──
+  // Store video temporarily
   let videoId = null;
   if (videoBase64 && videoType) {
     try {
@@ -107,20 +97,14 @@ export default async function handler(req, context) {
       const videoBuffer = Buffer.from(videoBase64, 'base64');
       const expiresAt = new Date(Date.now() + VIDEO_TTL_MS).toISOString();
       await store.set(videoId, videoBuffer, {
-        metadata: {
-          contentType: videoType,
-          expiresAt,
-          createdAt: new Date().toISOString(),
-        },
+        metadata: { contentType: videoType, expiresAt, createdAt: new Date().toISOString() },
       });
     } catch (e) {
-      // Non-fatal — ruling still works without stored video
       console.error('Video store failed:', e.message);
       videoId = null;
     }
   }
 
-  // ── 2. Build vision prompt ──
   const leagueMap = { nba: 'NBA', ncaa: 'NCAA basketball', other: 'basketball' };
   const league = leagueMap[sport] || 'basketball';
 
@@ -160,7 +144,6 @@ Return exactly this structure:
   "oob_why":      "From this angle, it appears [oob reasoning, or n/a]"
 }`;
 
-  // Build image content blocks from frames
   const imageBlocks = frames.map(frame => ({
     type:   'image',
     source: { type: 'base64', media_type: 'image/jpeg', data: frame },
@@ -168,13 +151,9 @@ Return exactly this structure:
 
   const userMessage = [
     ...imageBlocks,
-    {
-      type: 'text',
-      text: `These ${frames.length} frames are from a ${league} play. Review them and return your ruling as JSON.`,
-    },
+    { type: 'text', text: `These ${frames.length} frames are from a ${league} play. Review them and return your ruling as JSON.` },
   ];
 
-  // ── 3. Call Claude ──
   let ruling;
   try {
     const response = await anthropic.messages.create({
@@ -185,33 +164,23 @@ Return exactly this structure:
     });
 
     const raw = response.content.find(b => b.type === 'text')?.text || '';
-
-    // Robust extraction — handle any Claude formatting
-    // 1. Try to pull JSON from a code block first
-    const fenceMatch = raw.match(/```(?:json)?\s*([\s\S]*?)```/);
-    // 2. Fall back to finding the first { ... } block in the response
+    const fenceMatch  = raw.match(/```(?:json)?\s*([\s\S]*?)```/);
     const objectMatch = raw.match(/\{[\s\S]*\}/);
-    const jsonStr = fenceMatch ? fenceMatch[1].trim()
+    const jsonStr = fenceMatch  ? fenceMatch[1].trim()
                   : objectMatch ? objectMatch[0].trim()
                   : raw.trim();
     ruling = JSON.parse(jsonStr);
   } catch (e) {
-    // If JSON parse fails, return a structured error
     return new Response(
       JSON.stringify({ error: 'AI could not produce a valid ruling. Try a clearer clip.' }),
       { status: 502, headers }
     );
   }
 
-  // ── 4. Return ruling + videoId ──
-  return new Response(
-    JSON.stringify({ ...ruling, videoId }),
-    { status: 200, headers }
-  );
+  return new Response(JSON.stringify({ ...ruling, videoId }), { status: 200, headers });
 }
 
 export const config = {
   path: '/api/refai-analyze',
-  // Increase timeout — vision calls can take a few seconds
   maxDuration: 30,
 };
