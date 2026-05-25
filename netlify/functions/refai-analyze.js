@@ -116,6 +116,5 @@ Return exactly this structure:
 }
 
 export const config = {
-  path: '/api/refai-analyze',
   maxDuration: 30,
 };
