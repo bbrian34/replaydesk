@@ -776,7 +776,7 @@
             <div class="loading-spinner" style="width:14px;height:14px;border-width:2px;"></div> Loading rankings…
           </div>
         </div>
-        <p style="font-size:0.58rem;color:var(--muted);text-align:center;margin-top:0.75rem;">Updated via ESPN · Preseason rankings set May 2025</p>
+        <p style="font-size:0.58rem;color:var(--muted);text-align:center;margin-top:0.75rem;">Updated via ESPN · Preseason rankings set May 2026</p>
       </div>
     </div>
 
@@ -1604,49 +1604,21 @@
     }
 
     async function loadMediaData() {
-      try {
-        // Fetch standings for team rankings
-        const standRes = await fetch('/.netlify/functions/wnba-data?type=standings');
-        const standData = await standRes.json();
-        const standings = standData.children?.[0]?.standings?.entries || [];
+      // Render hardcoded preseason player rankings immediately — no API needed
+      const playerRankEl = $('mPlayerRankings');
+      playerRankEl.innerHTML = '';
+      PRESEASON_PLAYERS.forEach((p) => {
+        playerRankEl.innerHTML += renderRankRow(p.rank, p.name, p.team, p.rank, p.rank);
+      });
 
-        const teamRankEl = $('mTeamRankings');
-        teamRankEl.innerHTML = '';
-        const sortedTeams = standings.sort((a,b) => {
-          const wa = a.stats?.find(s=>s.name==='wins')?.value || 0;
-          const wb = b.stats?.find(s=>s.name==='wins')?.value || 0;
-          return wb - wa;
-        });
+      // Render hardcoded preseason team rankings immediately
+      const teamRankEl = $('mTeamRankings');
+      teamRankEl.innerHTML = '';
+      PRESEASON_TEAMS.forEach((t) => {
+        teamRankEl.innerHTML += renderRankRow(t.rank, t.name, 'Preseason ranking', t.rank, t.rank);
+      });
 
-        sortedTeams.slice(0,12).forEach((entry, idx) => {
-          const teamName = entry.team?.displayName || 'Team';
-          const wins = entry.stats?.find(s=>s.name==='wins')?.value || 0;
-          const losses = entry.stats?.find(s=>s.name==='losses')?.value || 0;
-          const preEntry = PRESEASON_TEAMS.find(t => t.name === teamName);
-          const preRank = preEntry?.rank || idx + 1;
-          const currentRank = idx + 1;
-          liveTeamStats.push({ name: teamName, record: `${wins}-${losses}` });
-          teamRankEl.innerHTML += renderRankRow(currentRank, teamName, `${wins}-${losses} record`, preRank, currentRank);
-        });
-
-        // Fetch player stats
-        const playerRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/athletes?limit=50&active=true');
-        const playerData = await playerRes.json();
-
-        const playerRankEl = $('mPlayerRankings');
-        playerRankEl.innerHTML = '';
-
-        PRESEASON_PLAYERS.forEach((p, idx) => {
-          const currentRank = idx + 1;
-          const detail = p.team;
-          playerRankEl.innerHTML += renderRankRow(currentRank, p.name, detail, p.rank, currentRank);
-        });
-
-      } catch(e) {
-        $('mPlayerRankings').innerHTML = '<p style="font-size:0.72rem;color:var(--muted2);text-align:center;padding:1rem;">Could not load rankings — check connection.</p>';
-      }
-
-      // Load articles from ESPN RSS
+      // Load articles from ESPN via proxy
       try {
         const rssRes = await fetch('/.netlify/functions/wnba-data?type=news');
         const rssData = await rssRes.json();
