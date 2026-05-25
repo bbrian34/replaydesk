@@ -459,6 +459,14 @@
     }
 
 
+
+    .game-card.live { background: rgba(245,166,35,0.08); border: 1.5px solid var(--amber); cursor: default; }
+    .game-card-score { font-family: var(--head); font-size: 1.1rem; font-weight: 800; color: var(--text); }
+    .game-card.final .game-card-score { color: var(--green); }
+    .game-card.live .game-card-score { color: var(--amber); }
+    .live-status { background: rgba(245,166,35,0.15); color: var(--amber); border: 1px solid rgba(245,166,35,0.3); animation: livepulse 1.5s ease-in-out infinite; }
+    @keyframes livepulse { 0%,100%{opacity:1;} 50%{opacity:0.5;} }
+
     /* ── GAME CARDS ── */
     .game-list { display: flex; flex-direction: column; gap: 0.5rem; }
     .game-card { border-radius: 8px; padding: 0.85rem 1rem; display: flex; align-items: center; justify-content: space-between; min-height: 56px; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; transition: all 0.15s; user-select: none; }
@@ -1356,6 +1364,12 @@
     }
 
     // Fetch today's WNBA games from ESPN
+    let gamePollingInterval = null;
+
+    function stopPolling() {
+      if (gamePollingInterval) { clearInterval(gamePollingInterval); gamePollingInterval = null; }
+    }
+
     async function loadWNBAGames() {
       try {
         const res = await fetch('/.netlify/functions/wnba-data?type=scoreboard');
@@ -1371,6 +1385,7 @@
 
         gameList.innerHTML = '';
         let hasAny = false;
+        let hasLive = false;
 
         events.forEach(event => {
           const comp = event.competitions?.[0];
@@ -1383,13 +1398,24 @@
 
           const homeName = shortName(home.team.displayName);
           const awayName = shortName(away.team.displayName);
+          const homeScore = home.score || '0';
+          const awayScore = away.score || '0';
+          const clock = comp?.status?.displayClock || '';
+          const period = comp?.status?.period || '';
+          const periodText = period ? `Q${period} ${clock}` : '';
           const time = event.date ? new Date(event.date).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',timeZoneName:'short'}) : '';
 
           const card = document.createElement('div');
+          card.dataset.eventId = event.id;
 
           if (isDone) {
             card.className = 'game-card final';
-            card.innerHTML = `<div class="game-card-teams">${awayName} vs ${homeName}</div><div class="game-card-status">Final</div>`;
+            card.innerHTML = `
+              <div class="game-card-teams">${awayName} vs ${homeName}</div>
+              <div style="display:flex;align-items:center;gap:0.5rem;">
+                <div class="game-card-score">${awayScore}–${homeScore}</div>
+                <div class="game-card-status">Final</div>
+              </div>`;
             card.addEventListener('click', () => {
               document.querySelectorAll('.game-card.final').forEach(c => c.classList.remove('selected'));
               card.classList.add('selected');
@@ -1397,11 +1423,19 @@
               $('analyzeBtn').disabled = false;
             });
           } else if (isInProgress) {
-            card.className = 'game-card upcoming';
-            card.innerHTML = `<div class="game-card-teams">${awayName} vs ${homeName}</div><div class="game-card-status">In Progress</div>`;
+            hasLive = true;
+            card.className = 'game-card live';
+            card.innerHTML = `
+              <div class="game-card-teams">${awayName} vs ${homeName}</div>
+              <div style="display:flex;align-items:center;gap:0.5rem;">
+                <div class="game-card-score live-score">${awayScore}–${homeScore}</div>
+                <div class="game-card-status live-status">${periodText || 'Live'}</div>
+              </div>`;
           } else {
             card.className = 'game-card upcoming';
-            card.innerHTML = `<div class="game-card-teams">${awayName} vs ${homeName}</div><div class="game-card-status">${time}</div>`;
+            card.innerHTML = `
+              <div class="game-card-teams">${awayName} vs ${homeName}</div>
+              <div class="game-card-status">${time}</div>`;
           }
 
           gameList.appendChild(card);
@@ -1412,6 +1446,12 @@
           gameList.style.display = 'flex';
         } else {
           noGames.style.display = 'block';
+        }
+
+        // Poll every 60 seconds if any game is live
+        stopPolling();
+        if (hasLive) {
+          gamePollingInterval = setInterval(loadWNBAGames, 60000);
         }
 
       } catch(e) {
@@ -1468,8 +1508,8 @@
       }
     });
 
-    $('statBackBtn').addEventListener('click', () => { goHome(); });
-    $('statAgainBtn').addEventListener('click', () => { goHome(); });
+    $('statBackBtn').addEventListener('click', () => { stopPolling(); goHome(); });
+    $('statAgainBtn').addEventListener('click', () => { stopPolling(); goHome(); });
 
     $('statCopyBtn').addEventListener('click', async () => {
       if (!lastStatSummary) return;
