@@ -1340,7 +1340,7 @@
     // Fetch today's WNBA games from ESPN
     async function loadWNBAGames() {
       try {
-        const res = await fetch('https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard');
+        const res = await fetch('/.netlify/functions/wnba-data?type=scoreboard');
         const data = await res.json();
         const events = data.events || [];
         const gameList = $('gameList');
@@ -1405,7 +1405,7 @@
 
     // Fetch full box score for selected game
     async function fetchGameBoxScore(gameId) {
-      const res = await fetch(`https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/summary?event=${gameId}`);
+      const res = await fetch(`/.netlify/functions/wnba-data?type=summary&eventId=${gameId}`);
       return await res.json();
     }
 
@@ -1606,7 +1606,7 @@
     async function loadMediaData() {
       try {
         // Fetch standings for team rankings
-        const standRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/standings');
+        const standRes = await fetch('/.netlify/functions/wnba-data?type=standings');
         const standData = await standRes.json();
         const standings = standData.children?.[0]?.standings?.entries || [];
 
@@ -1648,7 +1648,7 @@
 
       // Load articles from ESPN RSS
       try {
-        const rssRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/news?limit=8');
+        const rssRes = await fetch('/.netlify/functions/wnba-data?type=news');
         const rssData = await rssRes.json();
         const articles = rssData.articles || [];
         const list = $('mediaArticleList');
