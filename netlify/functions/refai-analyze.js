@@ -1,20 +1,8 @@
-/**
- * replaydesk — refai-analyze
- */
-
 import Anthropic from '@anthropic-ai/sdk';
-import { getStore } from '@netlify/blobs';
-import { randomUUID } from 'crypto';
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-const VIDEO_TTL_MS = 15 * 60 * 1000;
-
 export default async function handler(req, context) {
-  const url  = new URL(req.url);
-  const path = url.pathname.replace(/.*\/refai-analyze/, '');
-
-  // Allow any netlify.app subdomain plus custom domains
   const origin = req.headers.get('origin') || '';
   const allowedOrigin =
     origin.endsWith('.netlify.app') ||
@@ -25,7 +13,7 @@ export default async function handler(req, context) {
 
   const headers = {
     'Access-Control-Allow-Origin':  allowedOrigin,
-    'Access-Control-Allow-Methods': 'POST, DELETE, GET, OPTIONS',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
     'Vary': 'Origin',
     'Content-Type': 'application/json',
@@ -33,42 +21,6 @@ export default async function handler(req, context) {
 
   if (req.method === 'OPTIONS') {
     return new Response(null, { status: 204, headers });
-  }
-
-  // DELETE /video/:id
-  if (req.method === 'DELETE' && path.startsWith('/video/')) {
-    const videoId = path.replace('/video/', '').trim();
-    if (!videoId) {
-      return new Response(JSON.stringify({ error: 'Missing video ID' }), { status: 400, headers });
-    }
-    try {
-      const store = getStore({ name: 'temp-videos', consistency: 'strong' });
-      await store.delete(videoId);
-    } catch (e) {}
-    return new Response(JSON.stringify({ deleted: true }), { status: 200, headers });
-  }
-
-  // GET /video/:id
-  if (req.method === 'GET' && path.startsWith('/video/')) {
-    const videoId = path.replace('/video/', '').trim();
-    try {
-      const store = getStore({ name: 'temp-videos', consistency: 'strong' });
-      const entry = await store.getWithMetadata(videoId, { type: 'arrayBuffer' });
-      if (!entry) {
-        return new Response(JSON.stringify({ error: 'Video not found or expired' }), { status: 404, headers });
-      }
-      const { data, metadata } = entry;
-      return new Response(data, {
-        status: 200,
-        headers: {
-          'Content-Type': metadata.contentType || 'video/mp4',
-          'Cache-Control': 'no-store',
-          'X-Expires-At': metadata.expiresAt || '',
-        },
-      });
-    } catch (e) {
-      return new Response(JSON.stringify({ error: 'Could not retrieve video' }), { status: 500, headers });
-    }
   }
 
   if (req.method !== 'POST') {
@@ -82,27 +34,10 @@ export default async function handler(req, context) {
     return new Response(JSON.stringify({ error: 'Invalid JSON body' }), { status: 400, headers });
   }
 
-  const { frames, sport, debate, videoBase64, videoType } = body;
+  const { frames, sport, debate } = body;
 
   if (!frames || !Array.isArray(frames) || frames.length === 0) {
     return new Response(JSON.stringify({ error: 'No frames provided' }), { status: 400, headers });
-  }
-
-  // Store video temporarily
-  let videoId = null;
-  if (videoBase64 && videoType) {
-    try {
-      const store = getStore({ name: 'temp-videos', consistency: 'strong' });
-      videoId = randomUUID();
-      const videoBuffer = Buffer.from(videoBase64, 'base64');
-      const expiresAt = new Date(Date.now() + VIDEO_TTL_MS).toISOString();
-      await store.set(videoId, videoBuffer, {
-        metadata: { contentType: videoType, expiresAt, createdAt: new Date().toISOString() },
-      });
-    } catch (e) {
-      console.error('Video store failed:', e.message);
-      videoId = null;
-    }
   }
 
   const leagueMap = { nba: 'NBA', ncaa: 'NCAA basketball', other: 'basketball' };
@@ -177,7 +112,7 @@ Return exactly this structure:
     );
   }
 
-  return new Response(JSON.stringify({ ...ruling, videoId }), { status: 200, headers });
+  return new Response(JSON.stringify({ ...ruling, videoId: null }), { status: 200, headers });
 }
 
 export const config = {
