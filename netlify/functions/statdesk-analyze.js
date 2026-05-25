@@ -8,8 +8,7 @@ export default async function handler(req, context) {
     origin.endsWith('.netlify.app') ||
     origin === 'https://replaydesk.com' ||
     origin === 'https://www.replaydesk.com'
-      ? origin
-      : '*';
+      ? origin : '*';
 
   const headers = {
     'Access-Control-Allow-Origin':  allowedOrigin,
@@ -19,30 +18,51 @@ export default async function handler(req, context) {
     'Content-Type': 'application/json',
   };
 
-  if (req.method === 'OPTIONS') {
-    return new Response(null, { status: 204, headers });
-  }
-
-  if (req.method !== 'POST') {
-    return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405, headers });
-  }
+  if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers });
+  if (req.method !== 'POST') return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405, headers });
 
   let body;
-  try {
-    body = await req.json();
-  } catch {
-    return new Response(JSON.stringify({ error: 'Invalid JSON body' }), { status: 400, headers });
-  }
+  try { body = await req.json(); }
+  catch { return new Response(JSON.stringify({ error: 'Invalid JSON' }), { status: 400, headers }); }
 
-  const { image1, image2, type1, type2, question } = body;
+  const { gameData } = body;
+  if (!gameData) return new Response(JSON.stringify({ error: 'No game data provided' }), { status: 400, headers });
 
-  if (!image1 || !image2) {
-    return new Response(JSON.stringify({ error: 'Two images required' }), { status: 400, headers });
-  }
+  // Extract key info from ESPN data
+  const comp = gameData.header?.competitions?.[0];
+  const home = comp?.competitors?.find(t => t.homeAway === 'home');
+  const away = comp?.competitors?.find(t => t.homeAway === 'away');
+  const homeName = home?.team?.displayName || 'Home';
+  const awayName = away?.team?.displayName || 'Away';
+  const homeScore = home?.score || '?';
+  const awayScore = away?.score || '?';
 
-  const systemPrompt = `You are an expert basketball game analyst. The user has uploaded two box score screenshots — one per team. Read the stats carefully and produce a detailed game analysis.
+  // Build stat summary from box score
+  const boxscores = gameData.boxscore?.players || [];
+  let statSummary = `${awayName} ${awayScore}, ${homeName} ${homeScore} - Final\n\n`;
 
-${question ? `The user specifically wants to know: ${question}. Address this directly in your narrative and insights.` : ''}
+  boxscores.forEach(teamData => {
+    const tName = teamData.team?.displayName || 'Team';
+    statSummary += `${tName}:\n`;
+    const stats = teamData.statistics?.[0];
+    if (stats) {
+      const labels = stats.labels || [];
+      stats.athletes?.slice(0, 8).forEach(athlete => {
+        const name = athlete.athlete?.displayName || 'Player';
+        const vals = athlete.stats || [];
+        const line = labels.map((l, i) => `${l}: ${vals[i] || '0'}`).join(', ');
+        statSummary += `  ${name} — ${line}\n`;
+      });
+      // Team totals
+      const totals = stats.totals || [];
+      if (totals.length) {
+        statSummary += `  TEAM TOTALS — ${labels.map((l,i) => `${l}: ${totals[i]||'0'}`).join(', ')}\n`;
+      }
+    }
+    statSummary += '\n';
+  });
+
+  const systemPrompt = `You are an expert WNBA game analyst. You have been given the full box score of a completed game. Analyze it and produce a detailed breakdown.
 
 You MUST respond with valid JSON only. No markdown, no backticks, no text outside the JSON.
 
@@ -55,7 +75,8 @@ Return exactly this structure:
     {"label":"Points","team1_name":"Team A","team1_value":"112","team2_name":"Team B","team2_value":"98","winner":1},
     {"label":"Rebounds","team1_name":"Team A","team1_value":"44","team2_name":"Team B","team2_value":"38","winner":1},
     {"label":"Assists","team1_name":"Team A","team1_value":"28","team2_name":"Team B","team2_value":"21","winner":1},
-    {"label":"Turnovers","team1_name":"Team A","team1_value":"12","team2_name":"Team B","team2_value":"18","winner":1}
+    {"label":"Turnovers","team1_name":"Team A","team1_value":"12","team2_name":"Team B","team2_value":"18","winner":1},
+    {"label":"FG%","team1_name":"Team A","team1_value":"48.2%","team2_name":"Team B","team2_value":"41.5%","winner":1}
   ],
   "insights": [
     "<strong>Shooting efficiency:</strong> explanation of who shot better and why it mattered",
@@ -70,14 +91,7 @@ Return exactly this structure:
       model: 'claude-haiku-4-5-20251001',
       max_tokens: 1500,
       system: systemPrompt,
-      messages: [{
-        role: 'user',
-        content: [
-          { type: 'image', source: { type: 'base64', media_type: type1 || 'image/jpeg', data: image1 } },
-          { type: 'image', source: { type: 'base64', media_type: type2 || 'image/jpeg', data: image2 } },
-          { type: 'text', text: 'Here are the two box scores. Analyze this game and return your breakdown as JSON.' }
-        ]
-      }]
+      messages: [{ role: 'user', content: `Here is the full box score:\n\n${statSummary}\n\nAnalyze this game and return your breakdown as JSON.` }]
     });
 
     const raw = response.content.find(b => b.type === 'text')?.text || '';
@@ -85,16 +99,11 @@ Return exactly this structure:
     const objectMatch = raw.match(/\{[\s\S]*\}/);
     const jsonStr = fenceMatch ? fenceMatch[1].trim() : objectMatch ? objectMatch[0].trim() : raw.trim();
     result = JSON.parse(jsonStr);
-  } catch (e) {
-    return new Response(
-      JSON.stringify({ error: 'Could not analyze. Try clearer screenshots.' }),
-      { status: 502, headers }
-    );
+  } catch(e) {
+    return new Response(JSON.stringify({ error: 'Could not analyze game. Try again.' }), { status: 502, headers });
   }
 
   return new Response(JSON.stringify(result), { status: 200, headers });
 }
 
-export const config = {
-  maxDuration: 30,
-};
+export const config = { maxDuration: 30 };
