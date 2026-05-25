@@ -458,6 +458,21 @@
       .detail-toggle:hover { border-color: var(--lime); color: var(--lime); }
     }
 
+
+    /* ── GAME CARDS ── */
+    .game-list { display: flex; flex-direction: column; gap: 0.5rem; }
+    .game-card { border-radius: 8px; padding: 0.85rem 1rem; display: flex; align-items: center; justify-content: space-between; min-height: 56px; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; transition: all 0.15s; user-select: none; }
+    .game-card.final { background: rgba(52,217,128,0.08); border: 1.5px solid var(--green); }
+    .game-card.final:active, .game-card.final.selected { background: rgba(52,217,128,0.18); transform: scale(0.99); }
+    .game-card.upcoming { background: var(--bg3); border: 1.5px solid var(--line2); opacity: 0.45; cursor: default; }
+    .game-card-teams { font-size: 0.95rem; font-weight: 600; }
+    .game-card.final .game-card-teams { color: var(--green); }
+    .game-card.upcoming .game-card-teams { color: var(--muted2); }
+    .game-card-status { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.25rem 0.55rem; border-radius: 4px; flex-shrink: 0; margin-left: 0.75rem; }
+    .game-card.final .game-card-status { background: rgba(52,217,128,0.15); color: var(--green); border: 1px solid rgba(52,217,128,0.3); }
+    .game-card.final.selected .game-card-status { background: var(--green); color: #0d0f14; }
+    .game-card.upcoming .game-card-status { background: transparent; color: var(--muted); border: 1px solid var(--line2); }
+
     /* ── STATDESK ── */
     .upload-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
     .upload-zone { border: 1.5px dashed var(--line2); border-radius: 8px; padding: 1.5rem 0.75rem; text-align: center; cursor: pointer; transition: border-color 0.15s, background 0.15s; -webkit-tap-highlight-color: transparent; position: relative; }
@@ -494,6 +509,58 @@
     .narrative-box::before { content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 3px; background: var(--lime); border-radius: 3px 0 0 3px; }
     .narr-label { font-size: 0.54rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--lime); display: block; margin-bottom: 0.35rem; }
     .narr-text { font-size: 0.85rem; font-weight: 300; font-style: italic; color: var(--text); line-height: 1.6; }
+
+
+    /* ── MEDIADESK ── */
+    .tab-row { display: flex; gap: 0.4rem; margin-bottom: 1rem; }
+    .tab { flex: 1; padding: 0.5rem; font-family: var(--body); font-size: 0.72rem; font-weight: 600; text-align: center; border-radius: 6px; border: 1px solid var(--line2); background: var(--bg3); color: var(--muted2); cursor: pointer; -webkit-tap-highlight-color: transparent; transition: all 0.15s; }
+    .tab.active { background: var(--lime); border-color: var(--lime); color: #0d0f14; }
+    .rank-list { display: flex; flex-direction: column; gap: 0.4rem; }
+    .rank-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 0.75rem; background: var(--bg3); border: 1px solid var(--line); border-radius: 8px; }
+    .rank-num { font-family: var(--head); font-size: 1.1rem; font-weight: 800; color: var(--muted); width: 24px; text-align: center; flex-shrink: 0; }
+    .rank-info { flex: 1; min-width: 0; }
+    .rank-name { font-size: 0.85rem; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .rank-detail { font-size: 0.6rem; color: var(--muted2); margin-top: 0.1rem; }
+    .rank-move { display: flex; flex-direction: column; align-items: center; gap: 0.1rem; flex-shrink: 0; }
+    .rank-arrow { font-size: 0.7rem; font-weight: 700; }
+    .rank-arrow.up { color: var(--green); }
+    .rank-arrow.down { color: var(--red); }
+    .rank-arrow.same { color: var(--muted); }
+    .rank-delta { font-size: 0.55rem; font-weight: 600; }
+    .rank-delta.up { color: var(--green); }
+    .rank-delta.down { color: var(--red); }
+    .rank-delta.same { color: var(--muted); }
+    .rank-pre { font-size: 0.55rem; color: var(--muted); text-align: center; }
+    .article-card { border-radius: 8px; padding: 0.85rem 1rem; border: 1.5px solid var(--line2); background: var(--bg3); margin-bottom: 0.5rem; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: all 0.15s; }
+    .article-card:active, .article-card.selected { border-color: var(--lime); background: rgba(200,241,53,0.04); }
+    .article-source { font-size: 0.55rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--lime); margin-bottom: 0.3rem; }
+    .article-title { font-size: 0.85rem; font-weight: 600; color: var(--text); line-height: 1.4; margin-bottom: 0.3rem; }
+    .article-meta { font-size: 0.6rem; color: var(--muted2); }
+    .url-input { width: 100%; background: var(--bg3); border: 1px solid var(--line2); color: var(--text); font-family: var(--body); font-size: 0.85rem; padding: 0.65rem 0.75rem; border-radius: 7px; margin-top: 0.75rem; -webkit-appearance: none; }
+    .url-input::placeholder { color: var(--muted); }
+    .url-input:focus { outline: none; border-color: var(--lime); }
+    .verdict-banner { border-radius: 8px; padding: 1.25rem 1rem; text-align: center; margin-bottom: 1rem; }
+    .verdict-banner.fair { background: rgba(52,217,128,0.08); border: 1.5px solid var(--green); }
+    .verdict-banner.biased { background: rgba(255,77,77,0.08); border: 1.5px solid var(--red); }
+    .verdict-banner.hype { background: rgba(245,166,35,0.08); border: 1.5px solid var(--amber); }
+    .verdict-word { font-family: var(--head); font-size: 3rem; font-weight: 800; letter-spacing: -0.02em; line-height: 1; }
+    .verdict-banner.fair .verdict-word { color: var(--green); }
+    .verdict-banner.biased .verdict-word { color: var(--red); }
+    .verdict-banner.hype .verdict-word { color: var(--amber); }
+    .verdict-sub { font-size: 0.65rem; color: var(--muted2); margin-top: 0.4rem; font-weight: 500; }
+    .article-title-small { font-size: 0.75rem; font-weight: 500; color: var(--muted2); font-style: italic; margin-bottom: 1rem; line-height: 1.4; padding: 0 0.25rem; }
+    .breakdown-box { background: var(--bg3); border-radius: 8px; padding: 0.85rem 0.95rem; margin-bottom: 0.5rem; position: relative; }
+    .breakdown-box::before { content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 3px; border-radius: 3px 0 0 3px; }
+    .breakdown-box.got-right::before { background: var(--green); }
+    .breakdown-box.got-wrong::before { background: var(--red); }
+    .breakdown-box.context::before { background: var(--amber); }
+    .breakdown-label { font-size: 0.54rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; display: block; margin-bottom: 0.35rem; }
+    .breakdown-box.got-right .breakdown-label { color: var(--green); }
+    .breakdown-box.got-wrong .breakdown-label { color: var(--red); }
+    .breakdown-box.context .breakdown-label { color: var(--amber); }
+    .breakdown-text { font-size: 0.82rem; color: var(--text); line-height: 1.6; }
+    .data-note { font-size: 0.65rem; color: var(--muted2); background: var(--bg3); border: 1px solid var(--line2); border-radius: 6px; padding: 0.5rem 0.75rem; margin-bottom: 0.85rem; line-height: 1.5; }
+    .data-note strong { color: var(--text); }
 
   </style>
 </head>
@@ -583,7 +650,12 @@
       <div class="tool-card" id="goStat">
         <span class="tool-card-icon">📊</span>
         <div class="tool-card-name">stat<span class="accent">desk</span></div>
-        <div class="tool-card-desc">Upload box scores. Get the full game story.</div>
+        <div class="tool-card-desc">Select a game. Get the full breakdown.</div>
+      </div>
+      <div class="tool-card" id="goMedia" style="grid-column: 1 / -1;">
+        <span class="tool-card-icon">⚖️</span>
+        <div class="tool-card-name">media<span class="accent">desk</span></div>
+        <div class="tool-card-desc">Power rankings + media bias checker. Is the coverage fair?</div>
       </div>
     </div>
   </div>
@@ -595,7 +667,7 @@
         <div class="hero-wordmark">
           <span class="hwm-replay">stat</span><span class="hwm-desk">desk</span>
         </div>
-        <svg width="32" height="32" viewBox="0 0 36 36" fill="none">
+        <svg width="32" height="32" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <rect x="4" y="20" width="6" height="12" rx="1" fill="#c8f135"/>
           <rect x="13" y="12" width="6" height="20" rx="1" fill="#c8f135" opacity="0.7"/>
           <rect x="22" y="6" width="6" height="26" rx="1" fill="#c8f135" opacity="0.45"/>
@@ -606,45 +678,24 @@
     </section>
     <div class="divider"></div>
     <div class="panel">
-      <div class="panel-head"><span class="panel-num">1</span> Upload box scores</div>
+      <div class="panel-head"><span class="panel-num">1</span> Select a completed game</div>
       <div class="panel-body">
-        <div class="upload-row">
-          <div class="upload-zone" id="zone1" role="button" tabindex="0">
-            <input type="file" id="sfile1" accept="image/*">
-            <span class="upload-zone-icon">📊</span>
-            <span class="upload-zone-label">Team 1</span>
-            <span class="upload-zone-hint">Screenshot of box score</span>
-            <div class="upload-zone-check">✓</div>
-          </div>
-          <div class="upload-zone" id="zone2" role="button" tabindex="0">
-            <input type="file" id="sfile2" accept="image/*">
-            <span class="upload-zone-icon">📊</span>
-            <span class="upload-zone-label">Team 2</span>
-            <span class="upload-zone-hint">Screenshot of box score</span>
-            <div class="upload-zone-check">✓</div>
-          </div>
+        <div id="gamesLoading" style="text-align:center;padding:1.5rem 0;font-size:0.72rem;color:var(--muted2);display:flex;align-items:center;justify-content:center;gap:0.5rem;">
+          <div class="loading-spinner" style="width:14px;height:14px;border-width:2px;"></div> Loading today's games…
         </div>
-        <div class="thumb-row">
-          <div class="thumb-wrap" id="thumb1Wrap"><img id="thumb1" alt="Team 1"><p class="thumb-meta" id="smeta1"></p></div>
-          <div class="thumb-wrap" id="thumb2Wrap"><img id="thumb2" alt="Team 2"><p class="thumb-meta" id="smeta2"></p></div>
-        </div>
-      </div>
-    </div>
-    <div class="panel" style="margin-bottom:0.5rem">
-      <div class="panel-head"><span class="panel-num">2</span> What do you want analyzed?</div>
-      <div class="panel-body">
-        <textarea id="statQuestion" class="question-input" placeholder="e.g. Who dominated the paint? Which team shot better from three? Who was the real MVP?" autocorrect="on" autocapitalize="sentences"></textarea>
+        <div id="gameList" class="game-list" style="display:none;"></div>
+        <p id="noGames" style="display:none;font-size:0.75rem;color:var(--muted2);text-align:center;padding:1rem 0;">No completed games yet today — check back after tip-off.</p>
       </div>
     </div>
     <div class="cta-bar">
       <button type="button" class="call-btn" id="analyzeBtn" disabled>Analyze Game</button>
-      <p class="cta-note">Nothing is stored · Screenshots analyzed and discarded</p>
+      <p class="cta-note">Powered by ESPN · AI analysis by Claude</p>
     </div>
     <p class="err" id="serr" role="alert"></p>
     <footer>Fan analysis tool — not affiliated with any league.<br>Sharing on X? Tag <strong>@replaydesk</strong> with the breakdown.</footer>
   </div>
 
-  <!-- STATDESK RESULT SCREEN -->
+    <!-- STATDESK RESULT SCREEN -->
   <div class="screen result-screen hidden" id="statResultScreen">
     <div class="result-screen-header">
       <button type="button" class="back-btn" id="statBackBtn">← New game</button>
@@ -684,6 +735,113 @@
       </button>
     </div>
     <footer>Fan analysis tool — not affiliated with any league.<br>Sharing on X? Tag <strong>@replaydesk</strong> with the breakdown.</footer>
+  </div>
+
+<!-- MEDIADESK INPUT SCREEN -->
+  <div class="screen input-screen hidden" id="mediaInputScreen">
+    <section class="hero">
+      <div class="hero-top-row">
+        <div class="hero-wordmark">
+          <span class="hwm-replay">media</span><span class="hwm-desk">desk</span>
+        </div>
+        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <line x1="18" y1="4" x2="18" y2="32" stroke="#c8f135" stroke-width="2" stroke-linecap="round"/>
+          <line x1="11" y1="32" x2="25" y2="32" stroke="#c8f135" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="5" y1="10" x2="31" y2="10" stroke="#c8f135" stroke-width="2" stroke-linecap="round"/>
+          <line x1="7" y1="10" x2="7" y2="20" stroke="#c8f135" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="2 2"/>
+          <ellipse cx="7" cy="22" rx="5" ry="2" stroke="#c8f135" stroke-width="1.8" fill="none"/>
+          <line x1="29" y1="10" x2="29" y2="20" stroke="#c8f135" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="2 2"/>
+          <ellipse cx="29" cy="22" rx="5" ry="2" stroke="#c8f135" stroke-width="1.8" fill="none"/>
+          <circle cx="18" cy="10" r="2" fill="#c8f135"/>
+        </svg>
+        <h1 class="hero-title">The coverage,<br><span class="accent">checked.</span></h1>
+      </div>
+    </section>
+    <div class="divider"></div>
+
+    <div class="panel">
+      <div class="panel-head"><span class="panel-num">↑</span> Power Rankings</div>
+      <div class="panel-body">
+        <div class="tab-row">
+          <div class="tab active" id="mTabPlayers" onclick="mSwitchTab('players')">Players</div>
+          <div class="tab" id="mTabTeams" onclick="mSwitchTab('teams')">Teams</div>
+        </div>
+        <div id="mPlayerRankings" class="rank-list">
+          <div style="text-align:center;padding:1rem;font-size:0.72rem;color:var(--muted2);display:flex;align-items:center;justify-content:center;gap:0.5rem;">
+            <div class="loading-spinner" style="width:14px;height:14px;border-width:2px;"></div> Loading rankings…
+          </div>
+        </div>
+        <div id="mTeamRankings" class="rank-list" style="display:none">
+          <div style="text-align:center;padding:1rem;font-size:0.72rem;color:var(--muted2);display:flex;align-items:center;justify-content:center;gap:0.5rem;">
+            <div class="loading-spinner" style="width:14px;height:14px;border-width:2px;"></div> Loading rankings…
+          </div>
+        </div>
+        <p style="font-size:0.58rem;color:var(--muted);text-align:center;margin-top:0.75rem;">Updated via ESPN · Preseason rankings set May 2025</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><span class="panel-num">2</span> Check an article</div>
+      <div class="panel-body">
+        <div id="mediaArticleList">
+          <div style="text-align:center;padding:1rem;font-size:0.72rem;color:var(--muted2);display:flex;align-items:center;justify-content:center;gap:0.5rem;">
+            <div class="loading-spinner" style="width:14px;height:14px;border-width:2px;"></div> Loading today's articles…
+          </div>
+        </div>
+        <input type="url" class="url-input" id="mediaUrlInput" placeholder="Or paste any article URL…">
+      </div>
+    </div>
+
+    <div class="cta-bar">
+      <button type="button" class="call-btn" id="mediaAnalyzeBtn" disabled>Check This Article</button>
+      <p class="cta-note">Rankings used as ground truth · AI analysis by Claude</p>
+    </div>
+    <p class="err" id="mediaErr" role="alert"></p>
+    <footer>Fan media analysis — not affiliated with ESPN or any league.<br>Sharing on X? Tag <strong>@replaydesk</strong> with the verdict.</footer>
+  </div>
+
+  <!-- MEDIADESK RESULT SCREEN -->
+  <div class="screen result-screen hidden" id="mediaResultScreen">
+    <div class="result-screen-header">
+      <button type="button" class="back-btn" id="mediaBackBtn">← Back</button>
+      <div class="result-badge">AI verdict · Not official</div>
+    </div>
+    <div class="result-header"><div class="result-title">Media Check</div></div>
+    <div class="result-body">
+      <p class="article-title-small" id="mediaArticleTitle"></p>
+      <div class="verdict-banner" id="mediaVerdictBanner">
+        <div class="verdict-word" id="mediaVerdictWord">—</div>
+        <div class="verdict-sub" id="mediaVerdictSub"></div>
+      </div>
+      <div class="data-note" id="mediaDataNote"></div>
+      <div class="breakdown-box got-right">
+        <span class="breakdown-label">What it got right</span>
+        <p class="breakdown-text" id="mediaGotRight"></p>
+      </div>
+      <div class="breakdown-box got-wrong">
+        <span class="breakdown-label">What it got wrong</span>
+        <p class="breakdown-text" id="mediaGotWrong"></p>
+      </div>
+      <div class="breakdown-box context">
+        <span class="breakdown-label">Missing context</span>
+        <p class="breakdown-text" id="mediaContext"></p>
+      </div>
+      <div class="copy-row">
+        <button type="button" class="primary" id="mediaCopyBtn">Copy for X</button>
+        <button type="button" id="mediaAgainBtn">Check Another</button>
+      </div>
+      <button type="button" class="share-btn" id="mediaShareBtn">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <circle cx="12" cy="3" r="1.8" stroke="#0d0f14" stroke-width="1.5"/>
+          <circle cx="12" cy="13" r="1.8" stroke="#0d0f14" stroke-width="1.5"/>
+          <circle cx="3" cy="8" r="1.8" stroke="#0d0f14" stroke-width="1.5"/>
+          <line x1="4.7" y1="7" x2="10.3" y2="4" stroke="#0d0f14" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="4.7" y1="9" x2="10.3" y2="12" stroke="#0d0f14" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        Share Verdict
+      </button>
+    </div>
+    <footer>Fan media analysis — not affiliated with ESPN or any league.<br>Sharing on X? Tag <strong>@replaydesk</strong> with the verdict.</footer>
   </div>
 
   <!-- LOADING SCREEN -->
@@ -819,7 +977,7 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    $('backBtn').addEventListener('click', () => { resetUi(false); showInput(); });
+    $('backBtn').addEventListener('click', () => { resetUi(false); allScreensHide(); homeScreen.classList.remove('hidden'); window.scrollTo({top:0,behavior:'smooth'}); });
 
     const clearObj=()=>{ if(objectUrl){URL.revokeObjectURL(objectUrl);objectUrl=null;} };
     const fmtBytes=n=>n<1048576?(n/1024).toFixed(1)+' KB':(n/1048576).toFixed(1)+' MB';
@@ -984,7 +1142,7 @@
       }catch{err.textContent='Copy failed.';err.classList.add('show');}
     });
 
-    $('againBtn').addEventListener('click',()=>{ resetUi(false); showInput(); });
+    $('againBtn').addEventListener('click',()=>{ resetUi(false); allScreensHide(); homeScreen.classList.remove('hidden'); window.scrollTo({top:0,behavior:'smooth'}); });
     window.addEventListener('pagehide',clearObj);
 
     // ── ASK THE ANALYST ──
@@ -1127,7 +1285,7 @@
     const statResultScreen = $('statResultScreen');
 
     function allScreensHide() {
-      [homeScreen, inputScreen, resultScreen, loadingScreen, statInputScreen, statResultScreen]
+      [homeScreen, inputScreen, resultScreen, loadingScreen, statInputScreen, statResultScreen, $('mediaInputScreen'), $('mediaResultScreen')]
         .forEach(s => s && s.classList.add('hidden'));
     }
 
@@ -1141,13 +1299,26 @@
       allScreensHide();
       statInputScreen.classList.remove('hidden');
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      loadWNBAGames();
     });
 
     // Override showInput to go back to home
     const origShowInput = showInput;
 
+
+    const WNBA_SHORT = {
+      'Indiana Fever': 'Fever', 'New York Liberty': 'Liberty',
+      'Las Vegas Aces': 'Aces', 'Seattle Storm': 'Storm',
+      'Chicago Sky': 'Sky', 'Atlanta Dream': 'Dream',
+      'Connecticut Sun': 'Sun', 'Dallas Wings': 'Wings',
+      'Los Angeles Sparks': 'Sparks', 'Minnesota Lynx': 'Lynx',
+      'Phoenix Mercury': 'Mercury', 'Washington Mystics': 'Mystics',
+      'Golden State Valkyries': 'Valkyries',
+    };
+    function shortName(full) { return WNBA_SHORT[full] || full.split(' ').pop(); }
+
     // ── STATDESK ──
-    let sfile1 = null, sfile2 = null, lastStatSummary = '';
+    let lastStatSummary = '', selectedGameId = null, selectedGameData = null;
 
     function statShowLoading() {
       allScreensHide();
@@ -1166,32 +1337,76 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function checkStatReady() { $('analyzeBtn').disabled = !(sfile1 && sfile2); }
+    // Fetch today's WNBA games from ESPN
+    async function loadWNBAGames() {
+      try {
+        const res = await fetch('https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard');
+        const data = await res.json();
+        const events = data.events || [];
+        const gameList = $('gameList');
+        const loading = $('gamesLoading');
+        const noGames = $('noGames');
 
-    function loadStatImage(file, zoneId, thumbId, wrapId, metaId, num) {
-      const zone = $(zoneId), thumb = $(thumbId), wrap = $(wrapId), meta = $(metaId);
-      thumb.src = URL.createObjectURL(file);
-      wrap.classList.add('show');
-      meta.textContent = file.name + ' · ' + (file.size < 1048576 ? (file.size/1024).toFixed(0)+' KB' : (file.size/1048576).toFixed(1)+' MB');
-      zone.classList.add('loaded');
-      if (num === 1) sfile1 = file; else sfile2 = file;
-      checkStatReady();
+        loading.style.display = 'none';
+
+        if (!events.length) { noGames.style.display = 'block'; return; }
+
+        gameList.innerHTML = '';
+        let hasAny = false;
+
+        events.forEach(event => {
+          const comp = event.competitions?.[0];
+          const status = comp?.status?.type;
+          const isDone = status?.completed === true;
+          const isInProgress = status?.state === 'in';
+          const home = comp?.competitors?.find(t => t.homeAway === 'home');
+          const away = comp?.competitors?.find(t => t.homeAway === 'away');
+          if (!home || !away) return;
+
+          const homeName = shortName(home.team.displayName);
+          const awayName = shortName(away.team.displayName);
+          const time = event.date ? new Date(event.date).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',timeZoneName:'short'}) : '';
+
+          const card = document.createElement('div');
+
+          if (isDone) {
+            card.className = 'game-card final';
+            card.innerHTML = `<div class="game-card-teams">${awayName} vs ${homeName}</div><div class="game-card-status">Final</div>`;
+            card.addEventListener('click', () => {
+              document.querySelectorAll('.game-card.final').forEach(c => c.classList.remove('selected'));
+              card.classList.add('selected');
+              selectedGameId = event.id;
+              $('analyzeBtn').disabled = false;
+            });
+          } else if (isInProgress) {
+            card.className = 'game-card upcoming';
+            card.innerHTML = `<div class="game-card-teams">${awayName} vs ${homeName}</div><div class="game-card-status">In Progress</div>`;
+          } else {
+            card.className = 'game-card upcoming';
+            card.innerHTML = `<div class="game-card-teams">${awayName} vs ${homeName}</div><div class="game-card-status">${time}</div>`;
+          }
+
+          gameList.appendChild(card);
+          hasAny = true;
+        });
+
+        if (hasAny) {
+          gameList.style.display = 'flex';
+        } else {
+          noGames.style.display = 'block';
+        }
+
+      } catch(e) {
+        $('gamesLoading').style.display = 'none';
+        $('serr').textContent = 'Could not load today\'s schedule. Try again.';
+        $('serr').classList.add('show');
+      }
     }
 
-    function setupStatZone(zoneId, fileId, thumbId, wrapId, metaId, num) {
-      const zone = $(zoneId), input = $(fileId);
-      zone.addEventListener('click', () => input.click());
-      zone.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); } });
-      input.addEventListener('change', () => { if (input.files[0]) loadStatImage(input.files[0], zoneId, thumbId, wrapId, metaId, num); });
-    }
-
-    setupStatZone('zone1','sfile1','thumb1','thumb1Wrap','smeta1',1);
-    setupStatZone('zone2','sfile2','thumb2','thumb2Wrap','smeta2',2);
-
-    function toBase64(file) {
-      return new Promise((res, rej) => {
-        const r = new FileReader(); r.onload = () => res(r.result.split(',')[1]); r.onerror = () => rej(new Error('Read failed')); r.readAsDataURL(file);
-      });
+    // Fetch full box score for selected game
+    async function fetchGameBoxScore(gameId) {
+      const res = await fetch(`https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/summary?event=${gameId}`);
+      return await res.json();
     }
 
     function renderStatResult(data) {
@@ -1214,22 +1429,22 @@
     }
 
     $('analyzeBtn').addEventListener('click', async () => {
-      if (!sfile1 || !sfile2) return;
+      if (!selectedGameId) return;
       $('serr').classList.remove('show'); $('serr').textContent = '';
       $('analyzeBtn').disabled = true;
       statShowLoading();
       try {
-        const [img1, img2] = await Promise.all([toBase64(sfile1), toBase64(sfile2)]);
+        const boxScore = await fetchGameBoxScore(selectedGameId);
         const response = await fetch('/.netlify/functions/statdesk-analyze', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ image1: img1, image2: img2, type1: sfile1.type, type2: sfile2.type, question: ($('statQuestion').value||'').trim() })
+          body: JSON.stringify({ gameData: boxScore })
         });
         const result = await response.json();
-        if (!response.ok) throw new Error(result.error || 'Could not analyze. Try clearer screenshots.');
+        if (!response.ok) throw new Error(result.error || 'Could not analyze. Try again.');
         renderStatResult(result);
       } catch(e) {
         statShowInput();
-        $('serr').textContent = e.message || 'Could not analyze. Try clearer screenshots.';
+        $('serr').textContent = e.message || 'Could not analyze. Try again.';
         $('serr').classList.add('show');
         $('analyzeBtn').disabled = false;
       }
@@ -1319,8 +1534,227 @@
     });
 
     // Start on home screen — hide all others
-    [inputScreen, resultScreen, loadingScreen, statInputScreen, statResultScreen].forEach(s => s && s.classList.add('hidden'));
+    [$('mediaInputScreen'), $('mediaResultScreen'), inputScreen, resultScreen, loadingScreen, statInputScreen, statResultScreen].forEach(s => s && s.classList.add('hidden'));
     homeScreen.classList.remove('hidden');
+
+
+    // ── MEDIADESK ──
+    const mediaInputScreen = $('mediaInputScreen');
+    const mediaResultScreen = $('mediaResultScreen');
+    let selectedArticleText = '', selectedArticleTitle = '', livePlayerStats = [], liveTeamStats = [], liveInjuries = [];
+
+    const PRESEASON_PLAYERS = [
+      {rank:1,name:"A'ja Wilson",team:"Las Vegas Aces"},
+      {rank:2,name:"Breanna Stewart",team:"New York Liberty"},
+      {rank:3,name:"Sabrina Ionescu",team:"New York Liberty"},
+      {rank:4,name:"Arike Ogunbowale",team:"Dallas Wings"},
+      {rank:5,name:"Kelsey Plum",team:"Las Vegas Aces"},
+      {rank:6,name:"Napheesa Collier",team:"Minnesota Lynx"},
+      {rank:7,name:"Jonquel Jones",team:"New York Liberty"},
+      {rank:8,name:"Jewell Loyd",team:"Seattle Storm"},
+      {rank:9,name:"DeWanna Bonner",team:"Connecticut Sun"},
+      {rank:10,name:"Caitlin Clark",team:"Indiana Fever"},
+      {rank:11,name:"Dearica Hamby",team:"Los Angeles Sparks"},
+      {rank:12,name:"Brittney Griner",team:"Phoenix Mercury"},
+      {rank:13,name:"Skylar Diggins-Smith",team:"Seattle Storm"},
+      {rank:14,name:"Nneka Ogwumike",team:"Seattle Storm"},
+      {rank:15,name:"Rhyne Howard",team:"Atlanta Dream"},
+      {rank:16,name:"Aliyah Boston",team:"Indiana Fever"},
+      {rank:17,name:"Aerial Powers",team:"Minnesota Lynx"},
+      {rank:18,name:"Courtney Williams",team:"Chicago Sky"},
+      {rank:19,name:"Tiffany Hayes",team:"Connecticut Sun"},
+      {rank:20,name:"Lexie Brown",team:"Los Angeles Sparks"},
+    ];
+
+    const PRESEASON_TEAMS = [
+      {rank:1,name:"Las Vegas Aces"},{rank:2,name:"New York Liberty"},
+      {rank:3,name:"Connecticut Sun"},{rank:4,name:"Seattle Storm"},
+      {rank:5,name:"Minnesota Lynx"},{rank:6,name:"Chicago Sky"},
+      {rank:7,name:"Atlanta Dream"},{rank:8,name:"Dallas Wings"},
+      {rank:9,name:"Indiana Fever"},{rank:10,name:"Phoenix Mercury"},
+      {rank:11,name:"Los Angeles Sparks"},{rank:12,name:"Washington Mystics"},
+    ];
+
+    function mSwitchTab(tab) {
+      $('mTabPlayers').classList.toggle('active', tab === 'players');
+      $('mTabTeams').classList.toggle('active', tab === 'teams');
+      $('mPlayerRankings').style.display = tab === 'players' ? 'flex' : 'none';
+      $('mTeamRankings').style.display = tab === 'teams' ? 'flex' : 'none';
+    }
+
+    function mediaGoHome() {
+      allScreensHide();
+      homeScreen.classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function renderRankRow(rank, name, detail, preRank, currentRank) {
+      const delta = preRank - currentRank;
+      const arrow = delta > 0 ? '▲' : delta < 0 ? '▼' : '—';
+      const cls = delta > 0 ? 'up' : delta < 0 ? 'down' : 'same';
+      const deltaText = delta > 0 ? '+' + delta : delta < 0 ? delta : '—';
+      const highlight = name === 'Caitlin Clark' || name === 'Indiana Fever' ? 'style="border-color:rgba(200,241,53,0.3)"' : '';
+      const nameStyle = name === 'Caitlin Clark' || name === 'Indiana Fever' ? 'style="color:var(--lime)"' : '';
+      const numStyle = name === 'Caitlin Clark' || name === 'Indiana Fever' ? 'style="color:var(--lime)"' : '';
+      return `<div class="rank-row" ${highlight}>
+        <div class="rank-num" ${numStyle}>${currentRank}</div>
+        <div class="rank-info"><div class="rank-name" ${nameStyle}>${name}</div><div class="rank-detail">${detail}</div></div>
+        <div class="rank-move"><div class="rank-arrow ${cls}">${arrow}</div><div class="rank-delta ${cls}">${deltaText}</div><div class="rank-pre">Pre: ${preRank}</div></div>
+      </div>`;
+    }
+
+    async function loadMediaData() {
+      try {
+        // Fetch standings for team rankings
+        const standRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/standings');
+        const standData = await standRes.json();
+        const standings = standData.children?.[0]?.standings?.entries || [];
+
+        const teamRankEl = $('mTeamRankings');
+        teamRankEl.innerHTML = '';
+        const sortedTeams = standings.sort((a,b) => {
+          const wa = a.stats?.find(s=>s.name==='wins')?.value || 0;
+          const wb = b.stats?.find(s=>s.name==='wins')?.value || 0;
+          return wb - wa;
+        });
+
+        sortedTeams.slice(0,12).forEach((entry, idx) => {
+          const teamName = entry.team?.displayName || 'Team';
+          const wins = entry.stats?.find(s=>s.name==='wins')?.value || 0;
+          const losses = entry.stats?.find(s=>s.name==='losses')?.value || 0;
+          const preEntry = PRESEASON_TEAMS.find(t => t.name === teamName);
+          const preRank = preEntry?.rank || idx + 1;
+          const currentRank = idx + 1;
+          liveTeamStats.push({ name: teamName, record: `${wins}-${losses}` });
+          teamRankEl.innerHTML += renderRankRow(currentRank, teamName, `${wins}-${losses} record`, preRank, currentRank);
+        });
+
+        // Fetch player stats
+        const playerRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/athletes?limit=50&active=true');
+        const playerData = await playerRes.json();
+
+        const playerRankEl = $('mPlayerRankings');
+        playerRankEl.innerHTML = '';
+
+        PRESEASON_PLAYERS.forEach((p, idx) => {
+          const currentRank = idx + 1;
+          const detail = p.team;
+          playerRankEl.innerHTML += renderRankRow(currentRank, p.name, detail, p.rank, currentRank);
+        });
+
+      } catch(e) {
+        $('mPlayerRankings').innerHTML = '<p style="font-size:0.72rem;color:var(--muted2);text-align:center;padding:1rem;">Could not load rankings — check connection.</p>';
+      }
+
+      // Load articles from ESPN RSS
+      try {
+        const rssRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/news?limit=8');
+        const rssData = await rssRes.json();
+        const articles = rssData.articles || [];
+        const list = $('mediaArticleList');
+        list.innerHTML = '';
+
+        articles.slice(0,5).forEach((art, i) => {
+          const card = document.createElement('div');
+          card.className = 'article-card' + (i === 0 ? ' selected' : '');
+          card.innerHTML = `<div class="article-source">ESPN</div><div class="article-title">${art.headline || 'Article'}</div><div class="article-meta">${art.description ? art.description.slice(0,80)+'…' : ''}</div>`;
+          card.addEventListener('click', () => {
+            document.querySelectorAll('.article-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            selectedArticleTitle = art.headline || '';
+            selectedArticleText = art.headline + '. ' + (art.description || '') + ' ' + (art.story || '');
+            $('mediaAnalyzeBtn').disabled = false;
+          });
+          if (i === 0) {
+            selectedArticleTitle = art.headline || '';
+            selectedArticleText = art.headline + '. ' + (art.description || '');
+            $('mediaAnalyzeBtn').disabled = false;
+          }
+          list.appendChild(card);
+        });
+
+        if (!articles.length) {
+          list.innerHTML = '<p style="font-size:0.72rem;color:var(--muted2);text-align:center;padding:1rem;">No articles found — paste a URL below.</p>';
+        }
+      } catch(e) {
+        $('mediaArticleList').innerHTML = '<p style="font-size:0.72rem;color:var(--muted2);text-align:center;padding:1rem;">Could not load articles — paste a URL below.</p>';
+      }
+    }
+
+    $('goMedia').addEventListener('click', () => {
+      allScreensHide();
+      mediaInputScreen.classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      loadMediaData();
+    });
+
+    $('mediaAnalyzeBtn').addEventListener('click', async () => {
+      const urlInput = $('mediaUrlInput').value.trim();
+      const text = urlInput || selectedArticleText;
+      if (!text) return;
+      $('mediaErr').classList.remove('show'); $('mediaErr').textContent = '';
+      $('mediaAnalyzeBtn').disabled = true;
+      allScreensHide();
+      loadingScreen.classList.remove('hidden');
+      $('loadingScreen').querySelector('.loading-label').textContent = 'ANALYZING';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      try {
+        const res = await fetch('/.netlify/functions/mediadesk-analyze', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            articleText: text,
+            articleUrl: urlInput || null,
+            playerStats: livePlayerStats,
+            teamStats: liveTeamStats,
+            injuryData: liveInjuries,
+          })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Could not analyze. Try again.');
+
+        $('mediaArticleTitle').textContent = '"' + (selectedArticleTitle || urlInput) + '"';
+        const banner = $('mediaVerdictBanner');
+        banner.className = 'verdict-banner ' + (data.verdict || 'fair').toLowerCase();
+        $('mediaVerdictWord').textContent = data.verdict || '—';
+        $('mediaVerdictSub').textContent = data.verdict_sub || '';
+        $('mediaDataNote').innerHTML = '<strong>Data used:</strong> ' + (data.data_used || '');
+        $('mediaGotRight').textContent = data.got_right || '—';
+        $('mediaGotWrong').textContent = data.got_wrong || '—';
+        $('mediaContext').textContent = data.missing_context || '—';
+
+        allScreensHide();
+        mediaResultScreen.classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch(e) {
+        allScreensHide();
+        mediaInputScreen.classList.remove('hidden');
+        $('mediaErr').textContent = e.message || 'Could not analyze. Try again.';
+        $('mediaErr').classList.add('show');
+        $('mediaAnalyzeBtn').disabled = false;
+      }
+    });
+
+    $('mediaBackBtn').addEventListener('click', mediaGoHome);
+    $('mediaAgainBtn').addEventListener('click', () => {
+      allScreensHide();
+      mediaInputScreen.classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    $('mediaCopyBtn').addEventListener('click', async () => {
+      const text = [
+        'mediadesk verdict: ' + $('mediaVerdictWord').textContent,
+        '"' + $('mediaArticleTitle').textContent + '"',
+        '',
+        $('mediaVerdictSub').textContent,
+      ].join('\n');
+      try { await navigator.clipboard.writeText(text); $('mediaCopyBtn').textContent='Copied ✓'; setTimeout(()=>$('mediaCopyBtn').textContent='Copy for X',2000); } catch {}
+    });
+
+    // Update allScreensHide to include media screens
+    const _origAllScreensHide = allScreensHide;
+
 
   </script>
 </body>
