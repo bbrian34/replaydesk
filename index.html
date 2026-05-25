@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+a<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -1543,45 +1543,47 @@
     const mediaResultScreen = $('mediaResultScreen');
     let selectedArticleText = '', selectedArticleTitle = '', livePlayerStats = [], liveTeamStats = [], liveInjuries = [];
 
-    // Current rank based on 2026 season stats through ~7 games. preRank = ESPN preseason ranking.
+    // Rankings updated May 25, 2026. preRank = ESPN preseason rank. rank = current based on full stats.
     const PRESEASON_PLAYERS = [
-      {rank:1,  preRank:9,  name:"Kelsey Plum",       team:"Los Angeles Sparks", stats:"26.0 PPG · 55.9 FG% · 38.5 3P% · 3.0 APG · 4.0 TO"},
-      {rank:2,  preRank:11, name:"Kelsey Mitchell",   team:"Indiana Fever",      stats:"26.5 PPG · 51.3 FG% · 27.8 3P% · 2.0 APG · 2.0 TO"},
-      {rank:3,  preRank:7,  name:"Allisha Gray",      team:"Atlanta Dream",      stats:"25.0 PPG · 42.1 FG% · 29.4 3P% · 1.5 APG · 2.0 TO"},
-      {rank:4,  preRank:4,  name:"Breanna Stewart",   team:"New York Liberty",   stats:"23.0 PPG · 47.0 FG% · 14.3 3P% · 9.0 RPG · 2.8 APG"},
-      {rank:5,  preRank:8,  name:"Paige Bueckers",    team:"Dallas Wings",       stats:"20.7 PPG · 57.1 FG% · 54.5 3P% · 5.0 APG · 1.3 TO"},
-      {rank:6,  preRank:1,  name:"A'ja Wilson",       team:"Las Vegas Aces",     stats:"20.0 PPG · 52.3 FG% · 40.0 3P% · 6.3 RPG · 2.0 BPG"},
-      {rank:7,  preRank:10, name:"Caitlin Clark",     team:"Indiana Fever",      stats:"22.0 PPG · 45.7 FG% · 18.8 3P% · 8.0 APG · 100% FT"},
-      {rank:8,  preRank:2,  name:"Alyssa Thomas",     team:"Phoenix Mercury",    stats:"16.3 PPG · 44.4 FG% · 9.3 APG · 6.3 RPG · 1.7 STL"},
-      {rank:9,  preRank:19, name:"Skylar Diggins",    team:"Chicago Sky",        stats:"18.0 PPG · 46.4 FG% · 42.9 3P% · 7.0 APG · 8.0 RPG"},
-      {rank:10, preRank:5,  name:"Jackie Young",      team:"Las Vegas Aces",     stats:"14.3 PPG · 45.9 FG% · 30.8 3P% · 6.0 APG · 1.3 TO"},
-      {rank:11, preRank:13, name:"Rhyne Howard",      team:"Atlanta Dream",      stats:"14.5 PPG · 29.2 FG% · 25.0 3P% · 4.5 APG · 2.0 STL"},
-      {rank:12, preRank:3,  name:"Napheesa Collier",  team:"Minnesota Lynx",     stats:"Out until June · Ankle surgery · Preseason #3"},
-      {rank:13, preRank:6,  name:"Sabrina Ionescu",   team:"New York Liberty",   stats:"Season debut May 25 · Ankle injury concern"},
-      {rank:14, preRank:22, name:"Angel Reese",       team:"Atlanta Dream",      stats:"11.5 PPG · 15.0 RPG · 42.1 FG% · League rebound leader"},
-      {rank:15, preRank:14, name:"Aliyah Boston",     team:"Indiana Fever",      stats:"13.5 PPG · 52.9 FG% · 5.5 RPG · 2.5 APG"},
-      {rank:16, preRank:16, name:"Nneka Ogwumike",    team:"Los Angeles Sparks", stats:"14.5 PPG · 50.0 FG% · 57.1 3P% · 7.5 RPG"},
-      {rank:17, preRank:18, name:"Jonquel Jones",     team:"New York Liberty",   stats:"11.5 PPG · 46.7 FG% · 38.5 3P% · 7.3 RPG · 2.8 APG"},
-      {rank:18, preRank:17, name:"Chelsea Gray",      team:"Las Vegas Aces",     stats:"Steady · Aces 4-2 · Veteran leadership"},
-      {rank:19, preRank:12, name:"Kahleah Copper",    team:"Phoenix Mercury",    stats:"18.0 PPG · 36.5 FG% · 18.8 3P% · 3.3 TO · Mercury 2-5"},
-      {rank:20, preRank:20, name:"Arike Ogunbowale",  team:"Dallas Wings",       stats:"16.0 PPG · 41.5 FG% · 26.7 3P% · 2.3 APG"},
+      {rank:1,  preRank:1,  name:"A'ja Wilson",       team:"Las Vegas Aces",     stats:"PER 32.4 · 2.3 BPG league leader · Win Shares leader · Aces 4-2 · .504 team FG%"},
+      {rank:2,  preRank:9,  name:"Kelsey Plum",       team:"Los Angeles Sparks", stats:"26.8 PPG · 161 total pts league leader · .643 3P% (Ogwumike) boost · Sparks 3-3"},
+      {rank:3,  preRank:10, name:"Caitlin Clark",     team:"Indiana Fever",      stats:"9.0 APG · 34.7% usage rate leads league · 52.7 AST% · Fever 4-2"},
+      {rank:4,  preRank:11, name:"Kelsey Mitchell",   team:"Indiana Fever",      stats:"Top scorer IND · 51.3 FG% · Fever 4-2 · Complementing Clark perfectly"},
+      {rank:5,  preRank:7,  name:"Allisha Gray",      team:"Atlanta Dream",      stats:"Top Dream scorer · Dream 4-1 · 36.0 MPG · Rhyne Howard 2.8 STL supporting"},
+      {rank:6,  preRank:4,  name:"Breanna Stewart",   team:"New York Liberty",   stats:"23.0 PPG · 47.0 FG% · 9.0 RPG · Liberty 3-3 underperforming"},
+      {rank:7,  preRank:2,  name:"Alyssa Thomas",     team:"Phoenix Mercury",    stats:"56 AST leads league · 9.0 APG · 237 min played · Mercury 2-5 struggling"},
+      {rank:8,  preRank:8,  name:"Paige Bueckers",    team:"Dallas Wings",       stats:"57.1 FG% · 54.5 3P% · 5.0 APG · Low TO · Wings 4-3"},
+      {rank:9,  preRank:5,  name:"Jackie Young",      team:"Las Vegas Aces",     stats:"6.0 APG · 45.9 FG% · 100% FT · Aces 4-2 · Championship experience"},
+      {rank:10, preRank:22, name:"Angel Reese",       team:"Atlanta Dream",      stats:"11.4 RPG · 29 OFF REB leads league · Dream 4-1 · 20.5 ORB%"},
+      {rank:11, preRank:13, name:"Rhyne Howard",      team:"Atlanta Dream",      stats:"36.0 MPG · 2.8 STL · Dream 4-1 · Elite two-way player"},
+      {rank:12, preRank:19, name:"Skylar Diggins",    team:"Chicago Sky",        stats:"18.0 PPG · 46.4 FG% · 42.9 3P% · 7.0 APG · 8.0 RPG · Sky 3-3"},
+      {rank:13, preRank:16, name:"Nneka Ogwumike",    team:"Los Angeles Sparks", stats:".643 3P% leads league · 50.0 FG% · 7.5 RPG · Sparks 3-3"},
+      {rank:14, preRank:3,  name:"Napheesa Collier",  team:"Minnesota Lynx",     stats:"Out until June · Ankle surgery · Lynx 4-2 without her · Preseason #3"},
+      {rank:15, preRank:14, name:"Aliyah Boston",     team:"Indiana Fever",      stats:"52.9 FG% · 5.5 RPG · 2.5 APG · Fever 4-2 · Consistent"},
+      {rank:16, preRank:6,  name:"Sabrina Ionescu",   team:"New York Liberty",   stats:"Season debut May 25 · Ankle concern · Liberty 3-3 below expectations"},
+      {rank:17, preRank:18, name:"Jonquel Jones",     team:"New York Liberty",   stats:"46.7 FG% · 38.5 3P% · 7.3 RPG · 2.8 APG · Liberty 3-3"},
+      {rank:18, preRank:17, name:"Chelsea Gray",      team:"Las Vegas Aces",     stats:"Elite playmaking · Aces 4-2 · Championship pedigree · Veteran steady"},
+      {rank:19, preRank:12, name:"Kahleah Copper",    team:"Phoenix Mercury",    stats:"122 FGA leads league · Carrying Mercury · 2-5 record dragging value"},
+      {rank:20, preRank:20, name:"Arike Ogunbowale",  team:"Dallas Wings",       stats:"16.0 PPG · 41.5 FG% · Wings 4-3 · Sharing with Bueckers"},
     ];
 
+    // Team rankings updated May 25, 2026. preRank = ESPN preseason. rank = current based on record + net rating.
     const PRESEASON_TEAMS = [
-      {rank:1,  preRank:3,  name:"Atlanta Dream",          detail:"4-1 · 87.5 FG · Low TO · Reese 15.0 RPG · Gray 25 PPG"},
-      {rank:2,  preRank:1,  name:"Las Vegas Aces",          detail:"4-2 · Wilson 52.3 FG% · Young 6.0 APG · Defending champs"},
-      {rank:3,  preRank:8,  name:"Minnesota Lynx",          detail:"4-2 · Collier out · Miles 7.0 APG · Overachieving"},
-      {rank:4,  preRank:4,  name:"Indiana Fever",           detail:"Strong start · Mitchell 26.5 PPG · Clark 8.0 APG"},
-      {rank:5,  preRank:6,  name:"Dallas Wings",            detail:"3-3 · Bueckers 57.1 FG% · 54.5 3P% · Low TO"},
-      {rank:6,  preRank:2,  name:"New York Liberty",        detail:"3-3 · Stewart 23 PPG · Ionescu returned · Below expectations"},
-      {rank:7,  preRank:9,  name:"Chicago Sky",             detail:"3-3 · Diggins 7.0 APG 8.0 RPG · Overperforming"},
-      {rank:8,  preRank:5,  name:"Los Angeles Sparks",      detail:"Plum 26.0 PPG 55.9 FG% · Ogwumike 57.1 3P%"},
-      {rank:9,  preRank:12, name:"Portland Fire",           detail:"3-3 · Carleton 41.7 3P% · Expansion holding own"},
-      {rank:10, preRank:10, name:"Toronto Tempo",           detail:"3-4 · Mabrey 26.5 PPG 45.0 3P% · Competing"},
-      {rank:11, preRank:11, name:"Washington Mystics",      detail:"2-3 · Citron 54.2 FG% · Iriafen 14.0 RPG · Youth"},
-      {rank:12, preRank:7,  name:"Phoenix Mercury",         detail:"2-5 · Thomas 9.3 APG · Team shooting 36.5 FG%"},
-      {rank:13, preRank:14, name:"Seattle Storm",           detail:"3-4 · Hiedeman 24 pts · Rebuilding but competitive"},
-      {rank:14, preRank:13, name:"Connecticut Sun",         detail:"1-6 · Major disappointment · Morrow 39.1 FG%"},
+      {rank:1,  preRank:4,  name:"Indiana Fever",           detail:"4-2 · NRtg +7.9 · 110.9 ORtg · Clark 9.0 APG · Mitchell leading scorer"},
+      {rank:2,  preRank:1,  name:"Las Vegas Aces",          detail:"4-2 · NRtg +5.0 · .504 FG% best in league · Wilson PER 32.4"},
+      {rank:3,  preRank:8,  name:"Minnesota Lynx",          detail:"4-2 · NRtg +7.8 · .500 FG% · Collier out · Overachieving"},
+      {rank:4,  preRank:3,  name:"Atlanta Dream",           detail:"4-1 · NRtg +5.9 · Reese 11.4 RPG · Gray top scorer · Low opp FT"},
+      {rank:5,  preRank:10, name:"Golden State Valkyries",  detail:"3-2 · NRtg +7.9 best 5-game · Williams 2.0 STL · Top defense"},
+      {rank:6,  preRank:6,  name:"Dallas Wings",            detail:"4-3 · NRtg +4.7 · 113.6 ORtg leads league · Bueckers 57.1 FG%"},
+      {rank:7,  preRank:2,  name:"New York Liberty",        detail:"3-3 · NRtg +4.1 · Stewart 23 PPG · Ionescu just returned"},
+      {rank:8,  preRank:9,  name:"Chicago Sky",             detail:"3-3 · NRtg 0.0 · Diggins 7 APG · Overperforming preseason"},
+      {rank:9,  preRank:5,  name:"Los Angeles Sparks",      detail:"3-3 · NRtg -5.5 · Plum 26.8 PPG · Defense a concern"},
+      {rank:10, preRank:12, name:"Portland Fire",           detail:"3-3 · NRtg -5.9 · Expansion team holding competitive"},
+      {rank:11, preRank:7,  name:"Phoenix Mercury",         detail:"2-5 · NRtg +0.3 · Thomas 9 APG · Record worse than stats show"},
+      {rank:12, preRank:11, name:"Washington Mystics",      detail:"2-3 · NRtg -8.5 · Citron + Iriafen developing · Young team"},
+      {rank:13, preRank:14, name:"Seattle Storm",           detail:"3-4 · NRtg 0.0 · Rebuilding · Competitive but thin"},
+      {rank:14, preRank:13, name:"Toronto Tempo",           detail:"3-4 · NRtg -4.1 · Mabrey 21 3PM · Expansion still finding way"},
+      {rank:15, preRank:13, name:"Connecticut Sun",         detail:"1-6 · NRtg -16.1 worst in league · Massive underperformance"},
     ];
 
     function mSwitchTab(tab) {
@@ -1617,14 +1619,14 @@
       const playerRankEl = $('mPlayerRankings');
       playerRankEl.innerHTML = '';
       PRESEASON_PLAYERS.forEach((p) => {
-        playerRankEl.innerHTML += renderRankRow(p.rank, p.name, p.team, p.rank, p.rank);
+        playerRankEl.innerHTML += renderRankRow(p.rank, p.name, p.stats || p.team, p.preRank, p.rank);
       });
 
       // Render hardcoded preseason team rankings immediately
       const teamRankEl = $('mTeamRankings');
       teamRankEl.innerHTML = '';
       PRESEASON_TEAMS.forEach((t) => {
-        teamRankEl.innerHTML += renderRankRow(t.rank, t.name, 'Preseason ranking', t.rank, t.rank);
+        teamRankEl.innerHTML += renderRankRow(t.rank, t.name, t.detail || t.name, t.preRank, t.rank);
       });
 
       // Load articles from ESPN via proxy
