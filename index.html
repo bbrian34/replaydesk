@@ -1662,12 +1662,9 @@
       const arrow = delta > 0 ? '▲' : delta < 0 ? '▼' : '—';
       const cls = delta > 0 ? 'up' : delta < 0 ? 'down' : 'same';
       const deltaText = delta > 0 ? '+' + delta : delta < 0 ? delta : '—';
-      const highlight = name === 'Caitlin Clark' || name === 'Indiana Fever' ? 'style="border-color:rgba(200,241,53,0.3)"' : '';
-      const nameStyle = name === 'Caitlin Clark' || name === 'Indiana Fever' ? 'style="color:var(--lime)"' : '';
-      const numStyle = name === 'Caitlin Clark' || name === 'Indiana Fever' ? 'style="color:var(--lime)"' : '';
-      return `<div class="rank-row" ${highlight}>
-        <div class="rank-num" ${numStyle}>${currentRank}</div>
-        <div class="rank-info"><div class="rank-name" ${nameStyle}>${name}</div><div class="rank-detail">${detail}</div></div>
+      return `<div class="rank-row">
+        <div class="rank-num">${currentRank}</div>
+        <div class="rank-info"><div class="rank-name">${name}</div><div class="rank-detail">${detail}</div></div>
         <div class="rank-move"><div class="rank-arrow ${cls}">${arrow}</div><div class="rank-delta ${cls}">${deltaText}</div><div class="rank-pre">Pre: ${preRank}</div></div>
       </div>`;
     }
