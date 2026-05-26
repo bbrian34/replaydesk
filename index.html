@@ -1387,106 +1387,6 @@
 
 
 
-    // Hardcoded leaders from Basketball Reference May 25, 2026
-    // Will be replaced by cached ESPN data after midnight fetch runs
-    const HARDCODED_LEADERS = {
-      points: [
-        {name:"Kelsey Plum",       team:"LAS", value:"26.8"},
-        {name:"Kelsey Mitchell",   team:"IND", value:"26.5"},
-        {name:"Marina Mabrey",     team:"TOR", value:"24.6"},
-        {name:"Allisha Gray",      team:"ATL", value:"24.0"},
-        {name:"Breanna Stewart",   team:"NYL", value:"23.3"},
-        {name:"Kahleah Copper",    team:"PHO", value:"22.9"},
-        {name:"Caitlin Clark",     team:"IND", value:"22.0"},
-        {name:"Paige Bueckers",    team:"DAL", value:"20.7"},
-        {name:"Brittney Sykes",    team:"TOR", value:"20.4"},
-        {name:"Arike Ogunbowale",  team:"DAL", value:"19.9"},
-      ],
-      rebounds: [
-        {name:"Angel Reese",       team:"ATL", value:"11.4"},
-        {name:"Jessica Shepard",   team:"DAL", value:"10.1"},
-        {name:"Kiki Iriafen",      team:"WAS", value:"9.8"},
-        {name:"A'ja Wilson",       team:"LVA", value:"9.3"},
-        {name:"Napheesa Collier",  team:"MIN", value:"9.0"},
-        {name:"Natasha Howard",    team:"MIN", value:"8.8"},
-        {name:"Aneesah Morrow",    team:"CON", value:"8.7"},
-        {name:"Jonquel Jones",     team:"NYL", value:"8.3"},
-        {name:"Aliyah Boston",     team:"IND", value:"8.0"},
-        {name:"Dearica Hamby",     team:"LAS", value:"7.8"},
-      ],
-      assists: [
-        {name:"Caitlin Clark",     team:"IND", value:"9.0"},
-        {name:"Alyssa Thomas",     team:"PHO", value:"8.0"},
-        {name:"Skylar Diggins",    team:"CHI", value:"7.2"},
-        {name:"Veronica Burton",   team:"GSV", value:"7.0"},
-        {name:"Courtney Williams", team:"MIN", value:"6.8"},
-        {name:"Jackie Young",      team:"LVA", value:"6.0"},
-        {name:"Jordin Canada",     team:"ATL", value:"5.8"},
-        {name:"Sabrina Ionescu",   team:"NYL", value:"5.7"},
-        {name:"Kelsey Plum",       team:"LAS", value:"5.5"},
-        {name:"Paige Bueckers",    team:"DAL", value:"5.3"},
-      ],
-      steals: [
-        {name:"Jordin Canada",     team:"ATL", value:"2.8"},
-        {name:"Gabby Williams",    team:"GSV", value:"2.3"},
-        {name:"Rhyne Howard",      team:"ATL", value:"2.2"},
-        {name:"Bridget Carleton",  team:"POR", value:"2.0"},
-        {name:"Brittney Sykes",    team:"TOR", value:"1.9"},
-        {name:"Caitlin Clark",     team:"IND", value:"1.8"},
-        {name:"Kelsey Mitchell",   team:"IND", value:"1.7"},
-        {name:"Alyssa Thomas",     team:"PHO", value:"1.7"},
-        {name:"DiJonai Carrington",team:"CHI", value:"1.6"},
-        {name:"Allisha Gray",      team:"ATL", value:"1.6"},
-      ],
-      blocks: [
-        {name:"A'ja Wilson",       team:"LVA", value:"2.3"},
-        {name:"Cameron Brink",     team:"LAS", value:"2.0"},
-        {name:"Ezi Magbegor",      team:"SEA", value:"1.8"},
-        {name:"Natasha Howard",    team:"MIN", value:"1.7"},
-        {name:"Alyssa Thomas",     team:"PHO", value:"1.5"},
-        {name:"Napheesa Collier",  team:"MIN", value:"1.5"},
-        {name:"Kiah Stokes",       team:"GSV", value:"1.4"},
-        {name:"Kamilla Cardoso",   team:"CHI", value:"1.3"},
-        {name:"Azura Stevens",     team:"CHI", value:"1.2"},
-        {name:"Alanna Smith",      team:"DAL", value:"1.2"},
-      ],
-      fg: [
-        {name:"NaLyssa Smith",     team:"LVA", value:".692"},
-        {name:"Megan Gustafson",   team:"POR", value:".667"},
-        {name:"Awak Kuier",        team:"DAL", value:".636"},
-        {name:"A'ja Wilson",       team:"LVA", value:".583"},
-        {name:"Paige Bueckers",    team:"DAL", value:".571"},
-        {name:"Kelsey Plum",       team:"LAS", value:".559"},
-        {name:"Natasha Howard",    team:"MIN", value:".556"},
-        {name:"Jackie Young",      team:"LVA", value:".542"},
-        {name:"Aliyah Boston",     team:"IND", value:".529"},
-        {name:"Kamilla Cardoso",   team:"CHI", value:".524"},
-      ],
-      threePoint: [
-        {name:"Nneka Ogwumike",    team:"LAS", value:".643"},
-        {name:"Rebekah Gardner",   team:"NYL", value:".556"},
-        {name:"Paige Bueckers",    team:"DAL", value:".545"},
-        {name:"Bridget Carleton",  team:"POR", value:".500"},
-        {name:"Leonie Fiebich",    team:"NYL", value:".467"},
-        {name:"Skylar Diggins",    team:"CHI", value:".429"},
-        {name:"Marina Mabrey",     team:"TOR", value:".350"},
-        {name:"Sabrina Ionescu",   team:"NYL", value:".340"},
-        {name:"Rhyne Howard",      team:"ATL", value:".333"},
-        {name:"Kelsey Plum",       team:"LAS", value:".385"},
-      ],
-      ft: [
-        {name:"Georgia Amoore",    team:"WAS", value:"1.000"},
-        {name:"DeWanna Bonner",    team:"PHO", value:"1.000"},
-        {name:"Jacy Sheldon",      team:"CHI", value:"1.000"},
-        {name:"Sabrina Ionescu",   team:"NYL", value:".933"},
-        {name:"Brittney Sykes",    team:"TOR", value:".912"},
-        {name:"Kelsey Mitchell",   team:"IND", value:".900"},
-        {name:"Caitlin Clark",     team:"IND", value:".895"},
-        {name:"Jackie Young",      team:"LVA", value:".889"},
-        {name:"Allisha Gray",      team:"ATL", value:".882"},
-        {name:"Kelsey Plum",       team:"LAS", value:".875"},
-      ],
-    };
     // ── STATDESK LEAGUE LEADERS ──
     let cachedLeaders = null;
 
@@ -1526,36 +1426,23 @@
     }
 
     async function loadLeaders() {
-      // Show hardcoded data immediately
-      cachedLeaders = HARDCODED_LEADERS;
-      $('leadersLoading').style.display = 'none';
-      $('leadersTabs').style.display = 'flex';
-      renderLeaderCat('points');
-      $('leadersUpdated').textContent = 'Stats through May 25, 2026 · Auto-updates nightly';
-
-      // Then try to get fresher cached data in background
       try {
         const res = await fetch('/.netlify/functions/wnba-data?type=stats');
         const data = await res.json();
         if (data.leaders && data.leaders.points?.length) {
           cachedLeaders = data.leaders;
-          const activeCat = document.querySelector('#leadersTabs .leaders-tab.active');
-          const cat = activeCat?.textContent?.toLowerCase() === 'ppg' ? 'points'
-                    : activeCat?.textContent?.toLowerCase() === 'rpg' ? 'rebounds'
-                    : activeCat?.textContent?.toLowerCase() === 'apg' ? 'assists'
-                    : activeCat?.textContent?.toLowerCase() === 'stl' ? 'steals'
-                    : activeCat?.textContent?.toLowerCase() === 'blk' ? 'blocks'
-                    : activeCat?.textContent?.toLowerCase() === 'fg%' ? 'fg'
-                    : activeCat?.textContent?.toLowerCase() === '3p%' ? 'threePoint'
-                    : 'points';
-          renderLeaderCat(cat);
+          $('leadersLoading').style.display = 'none';
+          $('leadersTabs').style.display = 'flex';
+          renderLeaderCat('points');
           if (data.updatedAt) {
             const d = new Date(data.updatedAt);
             $('leadersUpdated').textContent = 'Updated ' + d.toLocaleDateString('en-US',{month:'short',day:'numeric'}) + ' · Auto-updates nightly';
           }
+        } else {
+          $('leadersLoading').innerHTML = '<p style="color:var(--muted2);font-size:0.75rem;text-align:center;padding:1rem 0;">Stats updating tonight — check back after midnight.</p>';
         }
       } catch(e) {
-        // Hardcoded data already showing — no action needed
+        $('leadersLoading').innerHTML = '<p style="color:var(--muted2);font-size:0.75rem;text-align:center;padding:1rem 0;">Stats updating tonight — check back after midnight.</p>';
       }
     }
 
