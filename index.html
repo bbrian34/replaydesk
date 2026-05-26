@@ -467,6 +467,20 @@
     .live-status { background: rgba(245,166,35,0.15); color: var(--amber); border: 1px solid rgba(245,166,35,0.3); animation: livepulse 1.5s ease-in-out infinite; }
     @keyframes livepulse { 0%,100%{opacity:1;} 50%{opacity:0.5;} }
 
+
+    /* ── LEAGUE LEADERS ── */
+    .leaders-tabs { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .leaders-tab { padding: 0.4rem 0.65rem; font-family: var(--body); font-size: 0.68rem; font-weight: 600; border-radius: 6px; border: 1px solid var(--line2); background: var(--bg3); color: var(--muted2); cursor: pointer; -webkit-tap-highlight-color: transparent; transition: all 0.15s; white-space: nowrap; }
+    .leaders-tab.active { background: var(--lime); border-color: var(--lime); color: #0d0f14; }
+    .leaders-list { display: flex; flex-direction: column; gap: 0.4rem; }
+    .leader-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.75rem; background: var(--bg3); border: 1px solid var(--line); border-radius: 8px; }
+    .leader-rank { font-family: var(--head); font-size: 1rem; font-weight: 800; color: var(--muted); width: 22px; text-align: center; flex-shrink: 0; }
+    .leader-rank.gold { color: #FFD700; }
+    .leader-info { flex: 1; min-width: 0; }
+    .leader-name { font-size: 0.85rem; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .leader-team { font-size: 0.6rem; color: var(--muted2); margin-top: 0.1rem; }
+    .leader-value { font-family: var(--head); font-size: 1.2rem; font-weight: 800; color: var(--lime); flex-shrink: 0; }
+
     /* ── GAME CARDS ── */
     .game-list { display: flex; flex-direction: column; gap: 0.5rem; }
     .game-card { border-radius: 8px; padding: 0.85rem 1rem; display: flex; align-items: center; justify-content: space-between; min-height: 56px; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; transition: all 0.15s; user-select: none; }
@@ -686,13 +700,41 @@
     </section>
     <div class="divider"></div>
     <div class="panel">
-      <div class="panel-head"><span class="panel-num">1</span> Select a completed game</div>
-      <div class="panel-body">
-        <div id="gamesLoading" style="text-align:center;padding:1.5rem 0;font-size:0.72rem;color:var(--muted2);display:flex;align-items:center;justify-content:center;gap:0.5rem;">
-          <div class="loading-spinner" style="width:14px;height:14px;border-width:2px;"></div> Loading today's games…
+      <div class="panel-head">
+        <span class="panel-num">1</span>
+        <span id="statPanelTitle">Select a completed game</span>
+        <div style="margin-left:auto;display:flex;gap:0.4rem;">
+          <button class="leaders-tab active" id="tabGames" onclick="statSwitchView('games')">Games</button>
+          <button class="leaders-tab" id="tabLeaders" onclick="statSwitchView('leaders')">Leaders</button>
         </div>
-        <div id="gameList" class="game-list" style="display:none;"></div>
-        <p id="noGames" style="display:none;font-size:0.75rem;color:var(--muted2);text-align:center;padding:1rem 0;">No completed games yet today — check back after tip-off.</p>
+      </div>
+      <div class="panel-body">
+        <!-- GAMES VIEW -->
+        <div id="gamesView">
+          <div id="gamesLoading" style="text-align:center;padding:1.5rem 0;font-size:0.72rem;color:var(--muted2);display:flex;align-items:center;justify-content:center;gap:0.5rem;">
+            <div class="loading-spinner" style="width:14px;height:14px;border-width:2px;"></div> Loading today's games…
+          </div>
+          <div id="gameList" class="game-list" style="display:none;"></div>
+          <p id="noGames" style="display:none;font-size:0.75rem;color:var(--muted2);text-align:center;padding:1rem 0;">No completed games yet today — check back after tip-off.</p>
+        </div>
+        <!-- LEADERS VIEW -->
+        <div id="leadersView" style="display:none;">
+          <div id="leadersLoading" style="text-align:center;padding:1.5rem 0;font-size:0.72rem;color:var(--muted2);display:flex;align-items:center;justify-content:center;gap:0.5rem;">
+            <div class="loading-spinner" style="width:14px;height:14px;border-width:2px;"></div> Loading league leaders…
+          </div>
+          <div id="leadersTabs" class="leaders-tabs" style="display:none;">
+            <button class="leaders-tab active" onclick="showLeaderCat('points')">PPG</button>
+            <button class="leaders-tab" onclick="showLeaderCat('rebounds')">RPG</button>
+            <button class="leaders-tab" onclick="showLeaderCat('assists')">APG</button>
+            <button class="leaders-tab" onclick="showLeaderCat('steals')">STL</button>
+            <button class="leaders-tab" onclick="showLeaderCat('blocks')">BLK</button>
+            <button class="leaders-tab" onclick="showLeaderCat('fg')">FG%</button>
+            <button class="leaders-tab" onclick="showLeaderCat('threePoint')">3P%</button>
+            <button class="leaders-tab" onclick="showLeaderCat('ft')">FT%</button>
+          </div>
+          <div id="leadersList" class="leaders-list"></div>
+          <p id="leadersUpdated" style="font-size:0.55rem;color:var(--muted);text-align:center;margin-top:0.75rem;"></p>
+        </div>
       </div>
     </div>
     <div class="cta-bar">
@@ -1342,6 +1384,66 @@
       'Golden State Valkyries': 'Valkyries',
     };
     function shortName(full) { return WNBA_SHORT[full] || full.split(' ').pop(); }
+
+
+    // ── STATDESK LEAGUE LEADERS ──
+    let cachedLeaders = null;
+
+    function statSwitchView(view) {
+      $('tabGames').classList.toggle('active', view === 'games');
+      $('tabLeaders').classList.toggle('active', view === 'leaders');
+      $('gamesView').style.display = view === 'games' ? 'block' : 'none';
+      $('leadersView').style.display = view === 'leaders' ? 'block' : 'none';
+      $('statPanelTitle').textContent = view === 'games' ? 'Select a completed game' : 'League Leaders';
+      if (view === 'leaders' && !cachedLeaders) loadLeaders();
+    }
+
+    function showLeaderCat(cat) {
+      if (!cachedLeaders) return;
+      document.querySelectorAll('#leadersTabs .leaders-tab').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+      renderLeaderCat(cat);
+    }
+
+    function renderLeaderCat(cat) {
+      if (!cachedLeaders) return;
+      const data = cachedLeaders[cat] || [];
+      const list = $('leadersList');
+      list.innerHTML = '';
+      data.forEach((p, i) => {
+        const row = document.createElement('div');
+        row.className = 'leader-row';
+        row.innerHTML = `
+          <div class="leader-rank${i === 0 ? ' gold' : ''}">${i + 1}</div>
+          <div class="leader-info">
+            <div class="leader-name">${p.name}</div>
+            <div class="leader-team">${p.team}</div>
+          </div>
+          <div class="leader-value">${p.value}</div>`;
+        list.appendChild(row);
+      });
+    }
+
+    async function loadLeaders() {
+      try {
+        const res = await fetch('/.netlify/functions/wnba-data?type=stats');
+        const data = await res.json();
+        if (data.leaders) {
+          cachedLeaders = data.leaders;
+          $('leadersLoading').style.display = 'none';
+          $('leadersTabs').style.display = 'flex';
+          renderLeaderCat('points');
+          if (data.updatedAt) {
+            const d = new Date(data.updatedAt);
+            $('leadersUpdated').textContent = 'Updated ' + d.toLocaleDateString('en-US', {month:'short',day:'numeric'}) + ' at ' + d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+          }
+        } else {
+          $('leadersLoading').innerHTML = '<p style="color:var(--muted2);font-size:0.72rem;">Could not load leaders — try again later.</p>';
+        }
+      } catch(e) {
+        $('leadersLoading').innerHTML = '<p style="color:var(--muted2);font-size:0.72rem;">Could not load leaders — try again later.</p>';
+      }
+    }
 
     // ── STATDESK ──
     let lastStatSummary = '', selectedGameId = null, selectedGameData = null;
