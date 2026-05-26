@@ -1,3 +1,10 @@
+/**
+ * wnba-data — API proxy + cached stats server
+ * Serves cached daily stats and live scoreboard data
+ */
+
+import { getStore } from '@netlify/blobs';
+
 export default async function handler(req, context) {
   const origin = req.headers.get('origin') || '';
   const allowedOrigin =
@@ -18,25 +25,50 @@ export default async function handler(req, context) {
 
   const url = new URL(req.url);
   const type = url.searchParams.get('type') || 'scoreboard';
+  const ESPN_BASE = 'https://site.api.espn.com/apis/site/v2/sports/basketball/wnba';
 
-  // ESPN proxy for game data
-  const ESPN_URLS = {
-    scoreboard: 'https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard',
-    summary:    `https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/summary?event=${url.searchParams.get('eventId')}`,
-  };
-
-  if (type === 'scoreboard' || type === 'summary') {
-    const espnUrl = ESPN_URLS[type];
+  // Live scoreboard — always fresh
+  if (type === 'scoreboard') {
     try {
-      const res = await fetch(espnUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } });
+      const res = await fetch(`${ESPN_BASE}/scoreboard`, { headers: { 'User-Agent': 'Mozilla/5.0' } });
       const data = await res.json();
       return new Response(JSON.stringify(data), { status: 200, headers });
     } catch(e) {
-      return new Response(JSON.stringify({ error: 'Could not fetch ESPN data' }), { status: 502, headers });
+      return new Response(JSON.stringify({ error: 'Could not fetch scoreboard' }), { status: 502, headers });
     }
   }
 
-  // Opinion/feature articles — pull from multiple RSS feeds
+  // Game summary — always fresh
+  if (type === 'summary') {
+    try {
+      const eventId = url.searchParams.get('eventId');
+      const res = await fetch(`${ESPN_BASE}/summary?event=${eventId}`, { headers: { 'User-Agent': 'Mozilla/5.0' } });
+      const data = await res.json();
+      return new Response(JSON.stringify(data), { status: 200, headers });
+    } catch(e) {
+      return new Response(JSON.stringify({ error: 'Could not fetch summary' }), { status: 502, headers });
+    }
+  }
+
+  // Cached daily stats — leaders and standings
+  if (type === 'stats' || type === 'leaders' || type === 'standings') {
+    try {
+      const store = getStore({ name: 'wnba-stats', consistency: 'strong' });
+      const cached = await store.get('daily-stats');
+      if (cached) {
+        const data = JSON.parse(cached);
+        return new Response(JSON.stringify(data), { status: 200, headers });
+      }
+      // No cache yet — fetch live as fallback
+      const res = await fetch(`${ESPN_BASE}/leaders?limit=15`, { headers: { 'User-Agent': 'Mozilla/5.0' } });
+      const data = await res.json();
+      return new Response(JSON.stringify({ leaders: data, updatedAt: new Date().toISOString() }), { status: 200, headers });
+    } catch(e) {
+      return new Response(JSON.stringify({ error: 'Could not fetch stats' }), { status: 502, headers });
+    }
+  }
+
+  // Opinion articles from RSS feeds
   if (type === 'opinions') {
     const RSS_FEEDS = [
       { source: 'ESPN', url: 'https://www.espn.com/espn/rss/wnba/news' },
@@ -44,7 +76,6 @@ export default async function handler(req, context) {
       { source: 'CBS Sports', url: 'https://www.cbssports.com/rss/headlines/wnba/' },
     ];
 
-    // Keywords that indicate opinion/feature content vs game recaps
     const OPINION_KEYWORDS = [
       'should', 'why', 'how', 'best', 'worst', 'overrated', 'underrated',
       'ranking', 'ranked', 'power', 'mvp', 'case for', 'case against',
@@ -57,7 +88,14 @@ export default async function handler(req, context) {
     const RECAP_KEYWORDS = [
       'recap', 'game highlights', 'box score', 'final score',
       'beats', 'defeats', 'wins over', 'loses to', 'falls to',
-      'highlights from', 'watch:', 'game highlights'
+      'highlights from', 'watch:'
+    ];
+
+    const WNBA_TERMS = [
+      'wnba', 'fever', 'liberty', 'aces', 'dream', 'lynx', 'mercury',
+      'storm', 'sky', 'sparks', 'wings', 'sun', 'mystics', 'valkyries',
+      'tempo', 'clark', 'wilson', 'stewart', 'ionescu', 'collier',
+      'bueckers', 'reese', 'thomas', 'plum', 'mitchell', 'gray'
     ];
 
     const articles = [];
@@ -68,8 +106,6 @@ export default async function handler(req, context) {
           headers: { 'User-Agent': 'Mozilla/5.0', 'Accept': 'application/rss+xml, application/xml' }
         });
         const xml = await res.text();
-
-        // Parse RSS items
         const items = xml.match(/<item>([\s\S]*?)<\/item>/g) || [];
 
         for (const item of items.slice(0, 20)) {
@@ -80,51 +116,20 @@ export default async function handler(req, context) {
                         ?.replace(/<[^>]+>/g, '')?.trim() || '';
           const link = (item.match(/<link>(.*?)<\/link>/) ||
                         item.match(/<guid>(.*?)<\/guid>/))?.[1]?.trim() || '';
-          const pubDate = item.match(/<pubDate>(.*?)<\/pubDate>/)?.[1]?.trim() || '';
 
-          const titleLower = title.toLowerCase();
-          const descLower = desc.toLowerCase();
-          const combined = titleLower + ' ' + descLower;
+          const combined = (title + ' ' + desc).toLowerCase();
+          if (RECAP_KEYWORDS.some(k => combined.includes(k))) continue;
+          if (!WNBA_TERMS.some(k => combined.includes(k))) continue;
 
-          // Skip game recaps
-          const isRecap = RECAP_KEYWORDS.some(k => combined.includes(k));
-          if (isRecap) continue;
-
-          // Check for WNBA relevance
-          const isWNBA = combined.includes('wnba') || combined.includes('fever') ||
-                         combined.includes('liberty') || combined.includes('aces') ||
-                         combined.includes('dream') || combined.includes('lynx') ||
-                         combined.includes('mercury') || combined.includes('storm') ||
-                         combined.includes('sky') || combined.includes('sparks') ||
-                         combined.includes('wings') || combined.includes('sun') ||
-                         combined.includes('mystics') || combined.includes('valkyries') ||
-                         combined.includes('tempo') || combined.includes('clark') ||
-                         combined.includes('wilson') || combined.includes('stewart') ||
-                         combined.includes('ionescu') || combined.includes('collier');
-
-          if (!isWNBA) continue;
-
-          // Prefer opinion/feature content
-          const hasOpinion = OPINION_KEYWORDS.some(k => combined.includes(k));
-
-          articles.push({
-            source: feed.source,
-            headline: title,
-            description: desc.slice(0, 120),
-            url: link,
-            pubDate,
-            isOpinion: hasOpinion,
-            score: hasOpinion ? 2 : 1,
-          });
+          const isOpinion = OPINION_KEYWORDS.some(k => combined.includes(k));
+          articles.push({ source: feed.source, headline: title, description: desc.slice(0, 120), url: link, isOpinion, score: isOpinion ? 2 : 1 });
         }
       } catch(e) {
-        console.error(`Failed to fetch ${feed.source}:`, e.message);
+        console.error(`Failed ${feed.source}:`, e.message);
       }
     }
 
-    // Sort — opinion pieces first, then by date
     articles.sort((a, b) => b.score - a.score);
-
     return new Response(JSON.stringify({ articles: articles.slice(0, 8) }), { status: 200, headers });
   }
 
