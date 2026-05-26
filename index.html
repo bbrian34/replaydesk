@@ -1686,7 +1686,7 @@
 
       // Load articles from ESPN via proxy
       try {
-        const rssRes = await fetch('/.netlify/functions/wnba-data?type=news');
+        const rssRes = await fetch('/.netlify/functions/wnba-data?type=opinions');
         const rssData = await rssRes.json();
         const articles = rssData.articles || [];
         const list = $('mediaArticleList');
